@@ -67,5 +67,30 @@ namespace MyApi.Controllers
             }
         }
 
+        [HttpPatch]
+        public IActionResult Patch([FromBody] UpdateUserDTO dto, int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                User? user = _context.Users.Find(id);
+                
+                if (user == null)
+                    return NotFound();
+                
+                if (dto.Name != null) user.Name = dto.Name;
+                if (dto.Email != null) user.Email = dto.Email;
+
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
