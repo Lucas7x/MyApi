@@ -17,7 +17,7 @@ namespace MyApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string name = null)
+        public IActionResult Get([FromQuery]string? name, string? email, bool? isActive)
         {
             try
             {
@@ -26,9 +26,15 @@ namespace MyApi.Controllers
                 if (!string.IsNullOrEmpty(name))
                     users = users.Where(x => x.Name.Contains(name));
 
+                if (!string.IsNullOrEmpty(email))
+                    users = users.Where(x => x.Email.Contains(email));
+
+                if (isActive.HasValue)
+                    users = users.Where(x => x.IsActive == isActive.Value);
+
                 return Ok(new
                 {
-                    users = users,
+                    users = users.ToList(),
                 });
             }
             catch(Exception)
