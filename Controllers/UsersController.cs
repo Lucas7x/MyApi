@@ -37,6 +37,27 @@ namespace MyApi.Controllers
             }
         }
 
+        [HttpGet("{id:int}")]
+        public IActionResult GetById([FromRoute]int id)
+        {
+            try
+            {
+                var user = _context.Users.Find(id);
+
+                if (user == null)
+                    return NotFound("Registro não encontrado");
+
+                return Ok(new
+                {
+                    user
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody]CreateUserDTO dto)
         {
