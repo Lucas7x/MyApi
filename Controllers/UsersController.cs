@@ -32,9 +32,17 @@ namespace MyApi.Controllers
                 if (isActive.HasValue)
                     users = users.Where(x => x.IsActive == isActive.Value);
 
+                var userDtos = users.Select(x => new GetUserDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Email = x.Email,
+                    IsActive = x.IsActive
+                }).ToList();
+
                 return Ok(new
                 {
-                    users = users.ToList(),
+                    users = userDtos,
                 });
             }
             catch(Exception)
@@ -53,9 +61,17 @@ namespace MyApi.Controllers
                 if (user == null)
                     return NotFound("Registro não encontrado");
 
+                var userDto = new GetUserDTO
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    IsActive = user.IsActive
+                };
+
                 return Ok(new
                 {
-                    user
+                    userDto
                 });
             }
             catch (Exception)
