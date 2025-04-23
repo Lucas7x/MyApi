@@ -119,5 +119,27 @@ namespace MyApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpDelete]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            try
+            {
+                User? user = _context.Users.Find(id);
+
+                if (user == null)
+                    return NotFound();
+
+                user.IsActive = false;
+
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
