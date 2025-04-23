@@ -1,6 +1,6 @@
 ﻿namespace MyApi.Controllers.DTOs
 {
-    public class ListUserDTO
+    public class GetUserDTO
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
