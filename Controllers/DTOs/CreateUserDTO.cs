@@ -24,11 +24,5 @@ namespace MyApi.Controllers.DTOs
         [Required]
         [StringLength(50, MinimumLength = 3)]
         public string Password { get; set; }
-
-        /// <summary>
-        /// Situação atual do usuário.
-        /// </summary>
-        [Required]
-        public bool IsActive { get; set; }
     }
 }

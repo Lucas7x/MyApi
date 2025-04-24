@@ -2,6 +2,7 @@
 using MyApi.Controllers.DTOs;
 using MyApi.Data;
 using MyApi.Models;
+using MyApi.Utils;
 
 namespace MyApi.Controllers
 {
@@ -92,8 +93,8 @@ namespace MyApi.Controllers
                 {
                     Name = dto.Name,
                     Email = dto.Email,
-                    Password = dto.Password,
-                    IsActive = dto.IsActive,
+                    Password =  PasswordUtils.HashPassword(dto.Password),
+                    IsActive = true,
                 };
 
                 _context.Users.Add(newUser);
