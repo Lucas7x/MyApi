@@ -15,5 +15,11 @@ namespace MyApi.Controllers.DTOs
         /// </summary>
         [EmailAddress]
         public string? Email { get; set; }
+
+        /// <summary>
+        /// Senha do usuário.
+        /// </summary>
+        [StringLength(50, MinimumLength = 3)]
+        public string Password { get; set; }
     }
 }
