@@ -89,7 +89,7 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var newUser = new User
+                var newUser = new Person
                 {
                     Name = dto.Name,
                     Email = dto.Email,
@@ -119,7 +119,7 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                User? user = _context.Users.Find(id);
+                Person? user = _context.Users.Find(id);
                 
                 if (user == null)
                     return NotFound();
@@ -143,7 +143,7 @@ namespace MyApi.Controllers
         {
             try
             {
-                User? user = _context.Users.Find(id);
+                Person? user = _context.Users.Find(id);
 
                 if (user == null)
                     return NotFound();
