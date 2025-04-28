@@ -33,7 +33,7 @@ namespace MyApi.Controllers
                 if (isActive.HasValue)
                     users = users.Where(x => x.IsActive == isActive.Value);
 
-                var userDtos = users.Select(x => new GetUserDTO
+                var userDtos = users.Select(x => new GetPersonDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -62,7 +62,7 @@ namespace MyApi.Controllers
                 if (user == null)
                     return NotFound("Registro não encontrado");
 
-                var userDto = new GetUserDTO
+                var userDto = new GetPersonDTO
                 {
                     Id = user.Id,
                     Name = user.Name,
@@ -82,7 +82,7 @@ namespace MyApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]CreateUserDTO dto)
+        public IActionResult Post([FromBody]CreatePersonDTO dto)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace MyApi.Controllers
         }
 
         [HttpPatch]
-        public IActionResult Patch([FromBody] UpdateUserDTO dto, int id)
+        public IActionResult Patch([FromBody] UpdatePersonDTO dto, int id)
         {
             try
             {
