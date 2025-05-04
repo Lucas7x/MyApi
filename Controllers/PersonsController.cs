@@ -93,7 +93,6 @@ namespace MyApi.Controllers
                 {
                     Name = dto.Name,
                     Email = dto.Email,
-                    Password =  PasswordUtils.HashPassword(dto.Password),
                     IsActive = true,
                 };
 
@@ -126,7 +125,6 @@ namespace MyApi.Controllers
                 
                 if (dto.Name != null) user.Name = dto.Name;
                 if (dto.Email != null) user.Email = dto.Email;
-                if (dto.Password != null) user.Password = PasswordUtils.HashPassword(dto.Password);
 
                 _context.SaveChanges();
 
