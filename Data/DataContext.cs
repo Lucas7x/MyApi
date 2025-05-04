@@ -6,6 +6,7 @@ namespace MyApi.Data
     public class DataContext : DbContext
     {
         public DbSet<Person> Users { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
         public string DbPath { get; }
 
         public DataContext()
