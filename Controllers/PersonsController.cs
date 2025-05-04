@@ -8,11 +8,11 @@ namespace MyApi.Controllers
 {
     [ApiController]
     [Route("[Controller]")]
-    public class UsersController : ControllerBase
+    public class PersonsController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public UsersController(DataContext context)
+        public PersonsController(DataContext context)
         {
             _context = context;
         }
@@ -33,7 +33,7 @@ namespace MyApi.Controllers
                 if (isActive.HasValue)
                     users = users.Where(x => x.IsActive == isActive.Value);
 
-                var userDtos = users.Select(x => new GetUserDTO
+                var userDtos = users.Select(x => new GetPersonDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -62,7 +62,7 @@ namespace MyApi.Controllers
                 if (user == null)
                     return NotFound("Registro não encontrado");
 
-                var userDto = new GetUserDTO
+                var userDto = new GetPersonDTO
                 {
                     Id = user.Id,
                     Name = user.Name,
@@ -82,18 +82,17 @@ namespace MyApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]CreateUserDTO dto)
+        public IActionResult Post([FromBody]CreatePersonDTO dto)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var newUser = new User
+                var newUser = new Person
                 {
                     Name = dto.Name,
                     Email = dto.Email,
-                    Password =  PasswordUtils.HashPassword(dto.Password),
                     IsActive = true,
                 };
 
@@ -112,21 +111,20 @@ namespace MyApi.Controllers
         }
 
         [HttpPatch]
-        public IActionResult Patch([FromBody] UpdateUserDTO dto, int id)
+        public IActionResult Patch([FromBody] UpdatePersonDTO dto, int id)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                User? user = _context.Users.Find(id);
+                Person? user = _context.Users.Find(id);
                 
                 if (user == null)
                     return NotFound();
                 
                 if (dto.Name != null) user.Name = dto.Name;
                 if (dto.Email != null) user.Email = dto.Email;
-                if (dto.Password != null) user.Password = PasswordUtils.HashPassword(dto.Password);
 
                 _context.SaveChanges();
 
@@ -143,7 +141,7 @@ namespace MyApi.Controllers
         {
             try
             {
-                User? user = _context.Users.Find(id);
+                Person? user = _context.Users.Find(id);
 
                 if (user == null)
                     return NotFound();
