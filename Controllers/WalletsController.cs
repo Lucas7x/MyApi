@@ -58,5 +58,43 @@ namespace MyApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("{id:int}")]
+        public IActionResult GetById([FromRoute] int id)
+        {
+            try
+            {
+                var wallet = _context.Wallets.Find(id);
+
+                if (wallet == null)
+                    return NotFound("Registro não encontrado");
+
+                var walletDto = new GetWalletDTO
+                {
+                    Id = wallet.Id,
+                    Name = wallet.Name,
+                    Description = wallet.Description,
+                    Balance = wallet.Balance,
+                    Income = wallet.Income,
+                    OwnerId = wallet.OwnerId,
+                    Owner = new GetPersonDTO
+                    {
+                        Id = wallet.Owner.Id,
+                        Name = wallet.Owner.Name,
+                        Email = wallet.Owner.Email,
+                        IsActive = wallet.Owner.IsActive
+                    }
+                };
+
+                return Ok(new
+                {
+                    walletDto
+                });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
