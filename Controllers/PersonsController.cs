@@ -22,7 +22,7 @@ namespace MyApi.Controllers
         {
             try
             {
-                var users = _context.Users.AsQueryable();
+                var users = _context.Persons.AsQueryable();
 
                 if (!string.IsNullOrEmpty(name))
                     users = users.Where(x => x.Name.Contains(name));
@@ -57,7 +57,7 @@ namespace MyApi.Controllers
         {
             try
             {
-                var user = _context.Users.Find(id);
+                var user = _context.Persons.Find(id);
 
                 if (user == null)
                     return NotFound("Registro não encontrado");
@@ -96,7 +96,7 @@ namespace MyApi.Controllers
                     IsActive = true,
                 };
 
-                _context.Users.Add(newUser);
+                _context.Persons.Add(newUser);
                 _context.SaveChanges();
 
                 return Ok(new
@@ -118,7 +118,7 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Person? user = _context.Users.Find(id);
+                Person? user = _context.Persons.Find(id);
                 
                 if (user == null)
                     return NotFound();
@@ -136,12 +136,12 @@ namespace MyApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         public IActionResult Delete([FromRoute] int id)
         {
             try
             {
-                Person? user = _context.Users.Find(id);
+                Person? user = _context.Persons.Find(id);
 
                 if (user == null)
                     return NotFound();

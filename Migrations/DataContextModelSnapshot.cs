@@ -35,7 +35,7 @@ namespace MyApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("MyApi.Models.Wallet", b =>
