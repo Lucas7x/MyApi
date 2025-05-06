@@ -22,18 +22,18 @@ namespace MyApi.Controllers
         {
             try
             {
-                var users = _context.Persons.AsQueryable();
+                var persons = _context.Persons.AsQueryable();
 
                 if (!string.IsNullOrEmpty(name))
-                    users = users.Where(x => x.Name.Contains(name));
+                    persons = persons.Where(x => x.Name.Contains(name));
 
                 if (!string.IsNullOrEmpty(email))
-                    users = users.Where(x => x.Email.Contains(email));
+                    persons = persons.Where(x => x.Email.Contains(email));
 
                 if (isActive.HasValue)
-                    users = users.Where(x => x.IsActive == isActive.Value);
+                    persons = persons.Where(x => x.IsActive == isActive.Value);
 
-                var userDtos = users.Select(x => new GetPersonDTO
+                var personDtos = persons.Select(x => new GetPersonDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -43,7 +43,7 @@ namespace MyApi.Controllers
 
                 return Ok(new
                 {
-                    users = userDtos,
+                    persons = personDtos,
                 });
             }
             catch(Exception)
@@ -57,22 +57,22 @@ namespace MyApi.Controllers
         {
             try
             {
-                var user = _context.Persons.Find(id);
+                var person = _context.Persons.Find(id);
 
-                if (user == null)
+                if (person == null)
                     return NotFound("Registro não encontrado");
 
-                var userDto = new GetPersonDTO
+                var personDto = new GetPersonDTO
                 {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email,
-                    IsActive = user.IsActive
+                    Id = person.Id,
+                    Name = person.Name,
+                    Email = person.Email,
+                    IsActive = person.IsActive
                 };
 
                 return Ok(new
                 {
-                    userDto
+                    personDto
                 });
             }
             catch (Exception)
@@ -89,19 +89,19 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var newUser = new Person
+                var newPerson = new Person
                 {
                     Name = dto.Name,
                     Email = dto.Email,
                     IsActive = true,
                 };
 
-                _context.Persons.Add(newUser);
+                _context.Persons.Add(newPerson);
                 _context.SaveChanges();
 
                 return Ok(new
                 {
-                    id = newUser.Id
+                    id = newPerson.Id
                 });
             }
             catch (Exception)
@@ -118,13 +118,13 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Person? user = _context.Persons.Find(id);
+                Person? person = _context.Persons.Find(id);
                 
-                if (user == null)
+                if (person == null)
                     return NotFound();
                 
-                if (dto.Name != null) user.Name = dto.Name;
-                if (dto.Email != null) user.Email = dto.Email;
+                if (dto.Name != null) person.Name = dto.Name;
+                if (dto.Email != null) person.Email = dto.Email;
 
                 _context.SaveChanges();
 
@@ -141,12 +141,12 @@ namespace MyApi.Controllers
         {
             try
             {
-                Person? user = _context.Persons.Find(id);
+                Person? person = _context.Persons.Find(id);
 
-                if (user == null)
+                if (person == null)
                     return NotFound();
 
-                user.IsActive = false;
+                person.IsActive = false;
 
                 _context.SaveChanges();
 
