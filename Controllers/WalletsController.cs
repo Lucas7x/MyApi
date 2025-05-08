@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyApi.Controllers.DTOs;
 using MyApi.Data;
+using MyApi.Models;
 
 namespace MyApi.Controllers
 {
@@ -92,6 +93,42 @@ namespace MyApi.Controllers
                 });
             }
             catch(Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] CreateWalletDTO dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var owner = _context.Persons.Find(dto.OwnerId);
+                if (owner == null)
+                    return NotFound("Titular inválido");
+
+                var newWallet = new Wallet
+                {
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    Balance = dto.Balance,
+                    Income = dto.Income,
+                    OwnerId = owner.Id,
+                    Owner = owner
+                };
+
+                _context.Wallets.Add(newWallet);
+                _context.SaveChanges();
+
+                return Ok(new
+                {
+                    id = newWallet.Id
+                });
+            }
+            catch (Exception ex)
             {
                 return BadRequest();
             }
