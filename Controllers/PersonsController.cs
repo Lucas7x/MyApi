@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyApi.Controllers.DTOs;
 using MyApi.Data;
 using MyApi.Models;
@@ -57,7 +58,9 @@ namespace MyApi.Controllers
         {
             try
             {
-                var person = _context.Persons.Find(id);
+                var person = _context.Persons
+                    .Include(p => p.Wallets)
+                    .FirstOrDefault(p => p.Id == id);
 
                 if (person == null)
                     return NotFound("Registro não encontrado");
@@ -67,7 +70,15 @@ namespace MyApi.Controllers
                     Id = person.Id,
                     Name = person.Name,
                     Email = person.Email,
-                    IsActive = person.IsActive
+                    IsActive = person.IsActive,
+                    Wallets = person.Wallets.Select(w => new GetPersonWalletDTO
+                    {
+                        Id = w.Id,
+                        Name = w.Name,
+                        Description = w.Description,
+                        Balance = w.Balance,
+                        Income = w.Income
+                    }).ToList()
                 };
 
                 return Ok(new
