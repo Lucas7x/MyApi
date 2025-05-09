@@ -133,5 +133,42 @@ namespace MyApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPatch]
+        public IActionResult Patch([FromBody] UpdateWalletDTO dto, int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                Wallet? wallet = _context.Wallets.Find(id);
+
+                if (wallet == null)
+                    return NotFound("Carteira inválida");
+
+                if (dto.OwnerId != null)
+                {
+                    Person owner = _context.Persons.Find(dto.OwnerId);
+                    if (owner == null)
+                        return NotFound("Titular inválido");
+
+                    wallet.OwnerId = owner.Id;
+                    wallet.Owner = owner;
+                }
+
+                if (dto.Name != null) wallet.Name = dto.Name;
+                if (dto.Description != null) wallet.Description = dto.Description;
+                if (dto.Income != null) wallet.Income = dto.Income;
+
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
