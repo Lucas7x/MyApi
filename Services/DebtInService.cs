@@ -46,5 +46,45 @@ namespace MyApi.Services
 
             return debtIn.Id;
         }
+
+        public List<GetDebtInsDTO> GetAll(string? description, int? debtorId, DateTime? initialDate, DateTime? finalDate)
+        {
+            var debtIns = _context.DebtIns.AsQueryable();
+
+            if (description != null)
+                debtIns = debtIns.Where(x => x.Description.Contains(description));
+
+            if (debtorId != null)
+                debtIns = debtIns.Where(x => x.DebtorId == debtorId);
+
+            if (initialDate != null)
+                debtIns = debtIns.Where(x => x.CreatedAt >= initialDate);
+
+            if (finalDate != null)
+                debtIns = debtIns.Where(x => x.CreatedAt <= finalDate);
+
+            var debtInsDto = debtIns.Select(x => new GetDebtInsDTO
+            {
+                Id = x.Id,
+                Description = x.Description,
+                Amount = x.Amount,
+                CreatedAt = x.CreatedAt,
+                PaidAt = x.PaidAt,
+                Debtor = new GetDebtInDebtorDTO
+                {
+                    Id = x.Debtor.Id,
+                    Name = x.Debtor.Name,
+                },
+                Wallet = x.Wallet != null ? new GetDebtInWalletDTO
+                {
+                    Id = x.Wallet.Id,
+                    Name = x.Wallet.Name
+                } : null,
+            });
+
+            return debtInsDto.ToList();
+        }
+
+        
     }
 }

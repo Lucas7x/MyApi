@@ -39,5 +39,23 @@ namespace MyApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet]
+        public IActionResult Get([FromQuery] string? description, int? debtorId, DateTime? initialDate, DateTime? finalDate)
+        {
+            try
+            {
+                var debtIns = _service.GetAll(description, debtorId, initialDate, finalDate);
+
+                return Ok(new
+                {
+                    debtIns
+                });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
