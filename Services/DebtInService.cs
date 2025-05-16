@@ -85,6 +85,26 @@ namespace MyApi.Services
             return debtInsDto.ToList();
         }
 
-        
+        public void PayDebtIn(int debtInId, int walletId)
+        {
+            try
+            {
+                var debtIn = _context.DebtIns.Find(debtInId);
+                if (debtIn == null)
+                    throw new ArgumentException("Dívida inválida");
+
+                var wallet = _context.Wallets.Find(walletId);
+                if (wallet == null)
+                    throw new ArgumentException("Carteira inválida");
+
+                debtIn.Pay(wallet);
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

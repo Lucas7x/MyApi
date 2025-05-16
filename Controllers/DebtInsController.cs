@@ -41,7 +41,7 @@ namespace MyApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] string? description, int? debtorId, DateTime? initialDate, DateTime? finalDate)
+        public IActionResult Get([FromQuery] string? description, int? debtorId, string? initialDate, string? finalDate)
         {
             try
             {
