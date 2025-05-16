@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 using MyApi.Controllers.DTOs;
 using MyApi.Data;
 using MyApi.Models;
@@ -47,21 +48,35 @@ namespace MyApi.Services
             return debtIn.Id;
         }
 
-        public List<GetDebtInsDTO> GetAll(string? description, int? debtorId, DateTime? initialDate, DateTime? finalDate)
+        public List<GetDebtInsDTO> GetAll(string? description, int? debtorId, string? initialDate, string? finalDate)
         {
-            var debtIns = _context.DebtIns.AsQueryable();
+            var debtIns = _context.DebtIns
+                .Include(p => p.Debtor)
+                .AsQueryable();
 
             if (description != null)
                 debtIns = debtIns.Where(x => x.Description.Contains(description));
 
             if (debtorId != null)
-                debtIns = debtIns.Where(x => x.DebtorId == debtorId);
+                debtIns = debtIns.Where(x => x.Debtor.Id == debtorId);
 
-            if (initialDate != null)
-                debtIns = debtIns.Where(x => x.CreatedAt >= initialDate);
+            if (!string.IsNullOrWhiteSpace(initialDate))
+            {
+                var dateFormat = "dd-MM-yyyy";
+                if (!DateTime.TryParseExact(initialDate, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var initialDateTime))
+                    throw new ArgumentException($"Data inicial inválida. Use o formato {dateFormat}.");
 
-            if (finalDate != null)
-                debtIns = debtIns.Where(x => x.CreatedAt <= finalDate);
+                debtIns = debtIns.Where(x => x.CreatedAt >= initialDateTime);
+            }
+
+            if (!string.IsNullOrWhiteSpace(finalDate))
+            {
+                var dateFormat = "dd-MM-yyyy";
+                if (!DateTime.TryParseExact(finalDate, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var finalDateTime))
+                    throw new ArgumentException($"Data final inválida. Use o formato {dateFormat}.");
+
+                debtIns = debtIns.Where(x => x.CreatedAt <= finalDateTime);
+            }
 
             var debtInsDto = debtIns.Select(x => new GetDebtInsDTO
             {
