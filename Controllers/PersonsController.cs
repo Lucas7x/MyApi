@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyApi.Controllers.DTOs;
 using MyApi.Data;
 using MyApi.Models;
+using MyApi.Services.Interfaces;
 using MyApi.Utils;
 
 namespace MyApi.Controllers
@@ -11,11 +12,11 @@ namespace MyApi.Controllers
     [Route("[Controller]")]
     public class PersonsController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IPersonService _personService;
 
-        public PersonsController(DataContext context)
+        public PersonsController(IPersonService personService)
         {
-            _context = context;
+            _personService = personService;
         }
 
         [HttpGet]
@@ -23,16 +24,7 @@ namespace MyApi.Controllers
         {
             try
             {
-                var persons = _context.Persons.AsQueryable();
-
-                if (!string.IsNullOrEmpty(name))
-                    persons = persons.Where(x => x.Name.Contains(name));
-
-                if (!string.IsNullOrEmpty(email))
-                    persons = persons.Where(x => x.Email.Contains(email));
-
-                if (isActive.HasValue)
-                    persons = persons.Where(x => x.IsActive == isActive.Value);
+                var persons = _personService.List(name, email, isActive);
 
                 var personDtos = persons.Select(x => new GetPersonDTO
                 {
@@ -58,9 +50,7 @@ namespace MyApi.Controllers
         {
             try
             {
-                var person = _context.Persons
-                    .Include(p => p.Wallets)
-                    .FirstOrDefault(p => p.Id == id);
+                var person = _personService.GetPersonById(id);
 
                 if (person == null)
                     return NotFound("Registro não encontrado");
@@ -81,17 +71,14 @@ namespace MyApi.Controllers
                     }).ToList()
                 };
 
-                return Ok(new
-                {
-                    personDto
-                });
+                return Ok(personDto);
             }
             catch (Exception)
             {
                 return BadRequest();
             }
         }
-
+        
         [HttpPost]
         public IActionResult Post([FromBody]CreatePersonDTO dto)
         {
@@ -107,13 +94,9 @@ namespace MyApi.Controllers
                     IsActive = true,
                 };
 
-                _context.Persons.Add(newPerson);
-                _context.SaveChanges();
+                newPerson = _personService.Create(newPerson);
 
-                return Ok(new
-                {
-                    id = newPerson.Id
-                });
+                return Ok(newPerson);
             }
             catch (Exception)
             {
@@ -121,6 +104,7 @@ namespace MyApi.Controllers
             }
         }
 
+        
         [HttpPatch]
         public IActionResult Patch([FromBody] UpdatePersonDTO dto, int id)
         {
@@ -129,17 +113,13 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Person? person = _context.Persons.Find(id);
-                
-                if (person == null)
-                    return NotFound();
-                
-                if (dto.Name != null) person.Name = dto.Name;
-                if (dto.Email != null) person.Email = dto.Email;
+                Person updatedPerson = _personService.UpdatePartial(id, dto);
 
-                _context.SaveChanges();
-
-                return Ok();
+                return Ok(updatedPerson);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception)
             {
@@ -152,16 +132,13 @@ namespace MyApi.Controllers
         {
             try
             {
-                Person? person = _context.Persons.Find(id);
+                Person deletedPerson = _personService.Delete(id);
 
-                if (person == null)
-                    return NotFound();
-
-                person.IsActive = false;
-
-                _context.SaveChanges();
-
-                return Ok();
+                return Ok(deletedPerson);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception)
             {
