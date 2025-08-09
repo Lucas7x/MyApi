@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyApi.DTOs;
+﻿using MyApi.DTOs;
 using MyApi.Models;
 using MyApi.Repositories.Interfaces;
 using MyApi.Services.Interfaces;
@@ -15,24 +14,9 @@ namespace MyApi.Services.Implementations
             _personRepository = personRepository;
         }
 
-        public Person Create(Person person)
+        public Person GetById(int id)
         {
-            return _personRepository.Create(person);
-        }
-
-        public Person Delete(int id)
-        {
-            Person? person = _personRepository.Get(id);
-
-            if (person == null)
-                throw new KeyNotFoundException("Pessoa não encontrada");
-
-            return _personRepository.Delete(person);
-        }
-
-        public Person GetPersonById(int id)
-        {
-            return _personRepository.Get(id);
+            return _personRepository.GetById(id);
         }
 
         public List<Person> List(string? name, string? email, bool? isActive)
@@ -40,16 +24,47 @@ namespace MyApi.Services.Implementations
             return _personRepository.List(name, email, isActive);
         }
 
-        public Person UpdatePartial(int id, PersonUpdateDTO personDto)
+        public Person Create(PersonCreateDTO personDto)
         {
-            Person person = _personRepository.Get(id);
+            Person person = new Person
+            {
+                Name = personDto.Name,
+                Email = personDto.Email,
+                IsActive = true
+            };
+
+            _personRepository.Create(person);
+            _personRepository.SaveChanges();
+
+            return person;
+        }
+        
+        public Person Update(int id, PersonUpdateDTO personDto)
+        {
+            Person person = _personRepository.GetById(id);
             if (person == null)
                 throw new KeyNotFoundException("Pessoa não encontrada");
 
             if (personDto.Name != null) person.Name = personDto.Name;
             if (personDto.Email != null) person.Email = personDto.Email;
 
-            return _personRepository.Update(id, person);
+            _personRepository.Update(person);
+            _personRepository.SaveChanges();
+
+            return person;
+        }
+
+        public Person Delete(int id)
+        {
+            Person? person = _personRepository.GetById(id);
+
+            if (person == null)
+                throw new KeyNotFoundException("Pessoa não encontrada");
+
+            _personRepository.Delete(person);
+            _personRepository.SaveChanges();
+
+            return person;
         }
     }
 }

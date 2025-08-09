@@ -5,9 +5,10 @@ namespace MyApi.Repositories.Interfaces
     public interface IPersonRepository
     {
         List<Person> List(string? name, string? email, bool? isActive);
-        Person Get(int id);
+        Person GetById(int id);
         Person Create(Person person);
-        Person Update(int id, Person person);
+        Person Update(Person person);
         Person Delete(Person person);
+        void SaveChanges();
     }
 }

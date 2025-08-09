@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyApi.Controllers.DTOs;
 using MyApi.Data;
 using MyApi.Models;
 using MyApi.Repositories.Interfaces;
@@ -15,24 +14,7 @@ namespace MyApi.Repositories.Implementations
             _context = context;
         }
 
-        public Person Create(Person person)
-        {
-            _context.Persons.Add(person);
-            _context.SaveChanges();
-
-            return person;
-        }
-
-        public Person Delete(Person person)
-        {
-            person.IsActive = false;
-
-            _context.SaveChanges();
-
-            return person;
-        }
-
-        public Person Get(int id)
+        public Person GetById(int id)
         {
             var person = _context.Persons
                     .Include(p => p.Wallets)
@@ -57,19 +39,29 @@ namespace MyApi.Repositories.Implementations
             return persons.ToList();
         }
 
-        public Person Update(int id, Person person)
+        public Person Create(Person person)
         {
-            Person updatedPerson = this.Get(id);
-
-            if (updatedPerson == null)
-                return null;
-
-            if (person.Name != null) updatedPerson.Name = person.Name;
-            if (person.Email != null) updatedPerson.Email = person.Email;
-
-            _context.SaveChanges();
+            _context.Persons.Add(person);
 
             return person;
+        }
+
+        public Person Update(Person person)
+        {
+            _context.Update(person);
+            return person;
+        }
+
+        public Person Delete(Person person)
+        {
+            person.IsActive = false;
+
+            return person;
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
         }
     }
 }

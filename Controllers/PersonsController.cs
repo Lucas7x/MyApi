@@ -50,7 +50,7 @@ namespace MyApi.Controllers
         {
             try
             {
-                var person = _personService.GetPersonById(id);
+                var person = _personService.GetById(id);
 
                 if (person == null)
                     return NotFound("Registro não encontrado");
@@ -87,14 +87,7 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var newPerson = new Person
-                {
-                    Name = dto.Name,
-                    Email = dto.Email,
-                    IsActive = true,
-                };
-
-                newPerson = _personService.Create(newPerson);
+                Person newPerson = _personService.Create(dto);
 
                 return Ok(newPerson);
             }
@@ -113,7 +106,7 @@ namespace MyApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Person updatedPerson = _personService.UpdatePartial(id, dto);
+                Person updatedPerson = _personService.Update(id, dto);
 
                 return Ok(updatedPerson);
             }
