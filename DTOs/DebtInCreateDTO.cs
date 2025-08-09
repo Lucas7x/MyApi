@@ -1,6 +1,6 @@
 ﻿namespace MyApi.DTOs
 {
-    public class CreateDebtInDTO
+    public class DebtInCreateDTO
     {
         public string Description { get; set; }
         public double Amount { get; set; }

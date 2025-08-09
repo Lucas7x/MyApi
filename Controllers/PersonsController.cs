@@ -26,7 +26,7 @@ namespace MyApi.Controllers
             {
                 var persons = _personService.List(name, email, isActive);
 
-                var personDtos = persons.Select(x => new GetPersonDTO
+                var personDtos = persons.Select(x => new PersonDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -55,13 +55,13 @@ namespace MyApi.Controllers
                 if (person == null)
                     return NotFound("Registro não encontrado");
 
-                var personDto = new GetPersonDTO
+                var personDto = new PersonDTO
                 {
                     Id = person.Id,
                     Name = person.Name,
                     Email = person.Email,
                     IsActive = person.IsActive,
-                    Wallets = person.Wallets.Select(w => new GetPersonWalletDTO
+                    Wallets = person.Wallets.Select(w => new PersonWalletDTO
                     {
                         Id = w.Id,
                         Name = w.Name,
@@ -80,7 +80,7 @@ namespace MyApi.Controllers
         }
         
         [HttpPost]
-        public IActionResult Post([FromBody]CreatePersonDTO dto)
+        public IActionResult Post([FromBody]PersonCreateDTO dto)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace MyApi.Controllers
 
         
         [HttpPatch]
-        public IActionResult Patch([FromBody] UpdatePersonDTO dto, int id)
+        public IActionResult Patch([FromBody] PersonUpdateDTO dto, int id)
         {
             try
             {

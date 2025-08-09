@@ -2,7 +2,7 @@
 
 namespace MyApi.DTOs
 {
-    public class CreateWalletDTO
+    public class WalletCreateDTO
     {
         [Required]
         [StringLength(100, MinimumLength = 3)]

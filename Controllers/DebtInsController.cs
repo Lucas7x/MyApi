@@ -16,7 +16,7 @@ namespace MyApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreateDebtInDTO dto)
+        public IActionResult Post([FromBody] DebtInCreateDTO dto)
         {
             try
             {

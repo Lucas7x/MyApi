@@ -16,7 +16,7 @@ namespace MyApi.Services
             _context = context;
         }
 
-        public int Create(CreateDebtInDTO dto)
+        public int Create(DebtInCreateDTO dto)
         {
             var debtor = _context.Persons.Find(dto.DetborId);
             if (debtor == null)
@@ -49,7 +49,7 @@ namespace MyApi.Services
             return debtIn.Id;
         }
 
-        public List<GetDebtInsDTO> GetAll(string? description, int? debtorId, string? initialDate, string? finalDate)
+        public List<DebtInsDTO> GetAll(string? description, int? debtorId, string? initialDate, string? finalDate)
         {
             var debtIns = _context.DebtIns
                 .Include(p => p.Debtor)
@@ -79,19 +79,19 @@ namespace MyApi.Services
                 debtIns = debtIns.Where(x => x.CreatedAt <= finalDateTime);
             }
 
-            var debtInsDto = debtIns.Select(x => new GetDebtInsDTO
+            var debtInsDto = debtIns.Select(x => new DebtInsDTO
             {
                 Id = x.Id,
                 Description = x.Description,
                 Amount = x.Amount,
                 CreatedAt = x.CreatedAt,
                 PaidAt = x.PaidAt,
-                Debtor = new GetDebtInDebtorDTO
+                Debtor = new DebtInDebtorDTO
                 {
                     Id = x.Debtor.Id,
                     Name = x.Debtor.Name,
                 },
-                Wallet = x.Wallet != null ? new GetDebtInWalletDTO
+                Wallet = x.Wallet != null ? new DebtInWalletDTO
                 {
                     Id = x.Wallet.Id,
                     Name = x.Wallet.Name

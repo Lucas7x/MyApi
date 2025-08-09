@@ -2,7 +2,7 @@
 
 namespace MyApi.DTOs
 {
-    public class UpdateWalletDTO
+    public class WalletUpdateDTO
     {
         [StringLength(100, MinimumLength = 3)]
         public string? Name { get; set; }

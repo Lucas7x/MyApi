@@ -40,7 +40,7 @@ namespace MyApi.Services.Implementations
             return _personRepository.List(name, email, isActive);
         }
 
-        public Person UpdatePartial(int id, UpdatePersonDTO personDto)
+        public Person UpdatePartial(int id, PersonUpdateDTO personDto)
         {
             Person person = _personRepository.Get(id);
             if (person == null)

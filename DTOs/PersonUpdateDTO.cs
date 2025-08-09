@@ -2,7 +2,7 @@
 
 namespace MyApi.DTOs
 {
-    public class UpdatePersonDTO
+    public class PersonUpdateDTO
     {
         /// <summary>
         /// Nome completo do usuário.

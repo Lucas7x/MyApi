@@ -2,7 +2,7 @@
 
 namespace MyApi.DTOs
 {
-    public class GetDebtInsDTO
+    public class DebtInsDTO
     {
         public int Id { get; set; }
         public string Description { get; set; }
@@ -10,7 +10,7 @@ namespace MyApi.DTOs
         public DateTime CreatedAt { get; set; }
         public DateTime? PaidAt { get; set; }
 
-        public GetDebtInDebtorDTO Debtor { get; set; }
-        public GetDebtInWalletDTO? Wallet { get; set; }
+        public DebtInDebtorDTO Debtor { get; set; }
+        public DebtInWalletDTO? Wallet { get; set; }
     }
 }
