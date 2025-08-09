@@ -159,7 +159,7 @@ namespace MyApi.Controllers
 
                 if (dto.Name != null) wallet.Name = dto.Name;
                 if (dto.Description != null) wallet.Description = dto.Description;
-                if (dto.Income != null) wallet.Income = dto.Income;
+                if (dto.Income != null) wallet.Income = (double)dto.Income;
 
                 _context.SaveChanges();
 
