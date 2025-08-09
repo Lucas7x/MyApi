@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyApi.Data;
+using MyApi.DTOs;
 using MyApi.Models;
 using MyApi.Repositories.Interfaces;
 
@@ -23,18 +24,18 @@ namespace MyApi.Repositories.Implementations
             return person;
         }
 
-        public List<Person> List(string? name, string? email, bool? isActive)
+        public List<Person> List(PersonQueryFilter filter)
         {
             var persons = _context.Persons.AsQueryable();
 
-            if (!string.IsNullOrEmpty(name))
-                persons = persons.Where(x => x.Name.Contains(name));
+            if (!string.IsNullOrEmpty(filter.Name))
+                persons = persons.Where(x => x.Name.Contains(filter.Name));
 
-            if (!string.IsNullOrEmpty(email))
-                persons = persons.Where(x => x.Email.Contains(email));
+            if (!string.IsNullOrEmpty(filter.Email))
+                persons = persons.Where(x => x.Email.Contains(filter.Email));
 
-            if (isActive.HasValue)
-                persons = persons.Where(x => x.IsActive == isActive.Value);
+            if (!filter.ShowInative.HasValue || filter.ShowInative == false)
+                persons = persons.Where(x => x.IsActive == true);
 
             return persons.ToList();
         }

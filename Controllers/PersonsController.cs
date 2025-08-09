@@ -20,11 +20,18 @@ namespace MyApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery]string? name, string? email, bool? isActive)
+        public IActionResult Get([FromQuery]string? name, string? email, bool? showInative)
         {
             try
             {
-                var persons = _personService.List(name, email, isActive);
+                PersonQueryFilter filter = new PersonQueryFilter
+                {
+                    Name = name,
+                    Email = email,
+                    ShowInative = showInative
+                };
+
+                var persons = _personService.List(filter);
 
                 var personDtos = persons.Select(x => new PersonDTO
                 {

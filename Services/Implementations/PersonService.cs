@@ -19,9 +19,9 @@ namespace MyApi.Services.Implementations
             return _personRepository.GetById(id);
         }
 
-        public List<Person> List(string? name, string? email, bool? isActive)
+        public List<Person> List(PersonQueryFilter filter)
         {
-            return _personRepository.List(name, email, isActive);
+            return _personRepository.List(filter);
         }
 
         public Person Create(PersonCreateDTO personDto)
