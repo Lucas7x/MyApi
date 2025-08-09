@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyApi.Controllers.DTOs;
 using MyApi.Data;
+using MyApi.DTOs;
 using MyApi.Models;
 using MyApi.Services.Interfaces;
 using MyApi.Utils;

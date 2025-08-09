@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyApi.Controllers.DTOs;
+using MyApi.DTOs;
 using MyApi.Models;
 using MyApi.Repositories.Interfaces;
 using MyApi.Services.Interfaces;

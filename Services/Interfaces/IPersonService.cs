@@ -1,4 +1,4 @@
-﻿using MyApi.Controllers.DTOs;
+﻿using MyApi.DTOs;
 using MyApi.Models;
 
 namespace MyApi.Services.Interfaces

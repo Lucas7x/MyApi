@@ -1,6 +1,6 @@
 ﻿using MyApi.Models;
 
-namespace MyApi.Controllers.DTOs
+namespace MyApi.DTOs
 {
     public class GetDebtInsDTO
     {

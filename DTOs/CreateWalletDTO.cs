@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyApi.Controllers.DTOs
+namespace MyApi.DTOs
 {
     public class CreateWalletDTO
     {

@@ -1,4 +1,4 @@
-﻿namespace MyApi.Controllers.DTOs
+﻿namespace MyApi.DTOs
 {
     public class GetPersonDTO
     {

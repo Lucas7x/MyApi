@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyApi.Controllers.DTOs;
 using MyApi.Data;
+using MyApi.DTOs;
 using MyApi.Models;
 
 namespace MyApi.Controllers
