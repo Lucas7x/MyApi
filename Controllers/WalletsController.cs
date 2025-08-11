@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyApi.Controllers.DTOs;
 using MyApi.Data;
+using MyApi.DTOs;
 using MyApi.Models;
 
 namespace MyApi.Controllers
@@ -32,7 +32,7 @@ namespace MyApi.Controllers
                 if (ownerId != null)
                     wallets = wallets.Where(x => x.OwnerId == ownerId);
 
-                var walletDtos = wallets.Select(x => new GetWalletDTO
+                var walletDtos = wallets.Select(x => new WalletDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -40,7 +40,7 @@ namespace MyApi.Controllers
                     Balance = x.Balance,
                     Income = x.Income,
                     OwnerId = x.OwnerId,
-                    Owner = new GetPersonDTO
+                    Owner = new PersonDTO
                     {
                         Id = x.Owner.Id,
                         Name = x.Owner.Name,
@@ -70,7 +70,7 @@ namespace MyApi.Controllers
                 if (wallet == null)
                     return NotFound("Registro não encontrado");
 
-                var walletDto = new GetWalletDTO
+                var walletDto = new WalletDTO
                 {
                     Id = wallet.Id,
                     Name = wallet.Name,
@@ -78,7 +78,7 @@ namespace MyApi.Controllers
                     Balance = wallet.Balance,
                     Income = wallet.Income,
                     OwnerId = wallet.OwnerId,
-                    Owner = new GetPersonDTO
+                    Owner = new PersonDTO
                     {
                         Id = wallet.Owner.Id,
                         Name = wallet.Owner.Name,
@@ -99,7 +99,7 @@ namespace MyApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreateWalletDTO dto)
+        public IActionResult Post([FromBody] WalletCreateDTO dto)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace MyApi.Controllers
         }
 
         [HttpPatch]
-        public IActionResult Patch([FromBody] UpdateWalletDTO dto, int id)
+        public IActionResult Patch([FromBody] WalletUpdateDTO dto, int id)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace MyApi.Controllers
 
                 if (dto.Name != null) wallet.Name = dto.Name;
                 if (dto.Description != null) wallet.Description = dto.Description;
-                if (dto.Income != null) wallet.Income = dto.Income;
+                if (dto.Income != null) wallet.Income = (double)dto.Income;
 
                 _context.SaveChanges();
 

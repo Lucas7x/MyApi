@@ -7,6 +7,8 @@ namespace MyApi.Data
     {
         public DbSet<Person> Persons { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<DebtIn> DebtIns { get; set; }
+
         public string DbPath { get; }
 
         public DataContext()

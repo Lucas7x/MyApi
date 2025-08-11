@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MyApi.Controllers.DTOs;
-using MyApi.Data;
+using MyApi.DTOs;
 using MyApi.Models;
-using MyApi.Utils;
+using MyApi.Services.Interfaces;
 
 namespace MyApi.Controllers
 {
@@ -11,41 +9,31 @@ namespace MyApi.Controllers
     [Route("[Controller]")]
     public class PersonsController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IPersonService _personService;
 
-        public PersonsController(DataContext context)
+        public PersonsController(IPersonService personService)
         {
-            _context = context;
+            _personService = personService;
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery]string? name, string? email, bool? isActive)
+        public IActionResult Get([FromQuery] string? sortBy, bool descending, int pageIndex, int pageSize, string? name, string? email, bool? showInative)
         {
             try
             {
-                var persons = _context.Persons.AsQueryable();
+                PersonQueryFilter filter = new PersonQueryFilter {
+                    SortBy = sortBy,
+                    Descending = descending,
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
+                    Name = name,
+                    Email = email,
+                    ShowInative = showInative
+                };
 
-                if (!string.IsNullOrEmpty(name))
-                    persons = persons.Where(x => x.Name.Contains(name));
+                var persons = _personService.List(filter);
 
-                if (!string.IsNullOrEmpty(email))
-                    persons = persons.Where(x => x.Email.Contains(email));
-
-                if (isActive.HasValue)
-                    persons = persons.Where(x => x.IsActive == isActive.Value);
-
-                var personDtos = persons.Select(x => new GetPersonDTO
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Email = x.Email,
-                    IsActive = x.IsActive
-                }).ToList();
-
-                return Ok(new
-                {
-                    persons = personDtos,
-                });
+                return Ok(persons);
             }
             catch(Exception)
             {
@@ -58,20 +46,18 @@ namespace MyApi.Controllers
         {
             try
             {
-                var person = _context.Persons
-                    .Include(p => p.Wallets)
-                    .FirstOrDefault(p => p.Id == id);
+                var person = _personService.GetById(id);
 
                 if (person == null)
                     return NotFound("Registro não encontrado");
 
-                var personDto = new GetPersonDTO
+                var personDto = new PersonDTO
                 {
                     Id = person.Id,
                     Name = person.Name,
                     Email = person.Email,
                     IsActive = person.IsActive,
-                    Wallets = person.Wallets.Select(w => new GetPersonWalletDTO
+                    Wallets = person.Wallets.Select(w => new PersonWalletDTO
                     {
                         Id = w.Id,
                         Name = w.Name,
@@ -81,39 +67,25 @@ namespace MyApi.Controllers
                     }).ToList()
                 };
 
-                return Ok(new
-                {
-                    personDto
-                });
+                return Ok(personDto);
             }
             catch (Exception)
             {
                 return BadRequest();
             }
         }
-
+        
         [HttpPost]
-        public IActionResult Post([FromBody]CreatePersonDTO dto)
+        public IActionResult Post([FromBody]PersonCreateDTO dto)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var newPerson = new Person
-                {
-                    Name = dto.Name,
-                    Email = dto.Email,
-                    IsActive = true,
-                };
+                Person newPerson = _personService.Create(dto);
 
-                _context.Persons.Add(newPerson);
-                _context.SaveChanges();
-
-                return Ok(new
-                {
-                    id = newPerson.Id
-                });
+                return Ok(newPerson);
             }
             catch (Exception)
             {
@@ -121,25 +93,22 @@ namespace MyApi.Controllers
             }
         }
 
+        
         [HttpPatch]
-        public IActionResult Patch([FromBody] UpdatePersonDTO dto, int id)
+        public IActionResult Patch([FromBody] PersonUpdateDTO dto, int id)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Person? person = _context.Persons.Find(id);
-                
-                if (person == null)
-                    return NotFound();
-                
-                if (dto.Name != null) person.Name = dto.Name;
-                if (dto.Email != null) person.Email = dto.Email;
+                Person updatedPerson = _personService.Update(id, dto);
 
-                _context.SaveChanges();
-
-                return Ok();
+                return Ok(updatedPerson);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception)
             {
@@ -152,16 +121,13 @@ namespace MyApi.Controllers
         {
             try
             {
-                Person? person = _context.Persons.Find(id);
+                Person deletedPerson = _personService.Delete(id);
 
-                if (person == null)
-                    return NotFound();
-
-                person.IsActive = false;
-
-                _context.SaveChanges();
-
-                return Ok();
+                return Ok(deletedPerson);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception)
             {

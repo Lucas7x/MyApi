@@ -1,4 +1,9 @@
 using MyApi.Data;
+using MyApi.Repositories.Implementations;
+using MyApi.Repositories.Interfaces;
+using MyApi.Services;
+using MyApi.Services.Implementations;
+using MyApi.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +15,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>();
+
+// Registering Services and Repositories
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+
+builder.Services.AddScoped<DebtInService>();
 
 var app = builder.Build();
 
