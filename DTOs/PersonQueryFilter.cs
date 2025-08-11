@@ -1,6 +1,6 @@
 ﻿namespace MyApi.DTOs
 {
-    public class PersonQueryFilter
+    public class PersonQueryFilter : QueryFilter
     {
         public string? Name { get; set; }
         public string? Email { get; set; }

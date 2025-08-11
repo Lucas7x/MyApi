@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MyApi.Data;
 using MyApi.DTOs;
 using MyApi.Models;
 using MyApi.Services.Interfaces;
-using MyApi.Utils;
 
 namespace MyApi.Controllers
 {
@@ -20,12 +17,15 @@ namespace MyApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery]string? name, string? email, bool? showInative)
+        public IActionResult Get([FromQuery] string? sortBy, bool descending, int pageIndex, int pageSize, string? name, string? email, bool? showInative)
         {
             try
             {
-                PersonQueryFilter filter = new PersonQueryFilter
-                {
+                PersonQueryFilter filter = new PersonQueryFilter {
+                    SortBy = sortBy,
+                    Descending = descending,
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
                     Name = name,
                     Email = email,
                     ShowInative = showInative
@@ -33,18 +33,7 @@ namespace MyApi.Controllers
 
                 var persons = _personService.List(filter);
 
-                var personDtos = persons.Select(x => new PersonDTO
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Email = x.Email,
-                    IsActive = x.IsActive
-                }).ToList();
-
-                return Ok(new
-                {
-                    persons = personDtos,
-                });
+                return Ok(persons);
             }
             catch(Exception)
             {

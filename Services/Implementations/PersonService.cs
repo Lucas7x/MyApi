@@ -19,7 +19,7 @@ namespace MyApi.Services.Implementations
             return _personRepository.GetById(id);
         }
 
-        public List<Person> List(PersonQueryFilter filter)
+        public PaginatedResult<Person> List(PersonQueryFilter filter)
         {
             return _personRepository.List(filter);
         }

@@ -5,7 +5,7 @@ namespace MyApi.Repositories.Interfaces
 {
     public interface IPersonRepository
     {
-        List<Person> List(PersonQueryFilter filter);
+        PaginatedResult<Person> List(PersonQueryFilter filter);
         Person GetById(int id);
         Person Create(Person person);
         Person Update(Person person);
