@@ -15,7 +15,7 @@ namespace MyApi.Repositories.Implementations
             _context = context;
         }
 
-        public Person GetById(int id)
+        public Person? GetById(int id)
         {
             var person = _context.Persons
                     .Include(p => p.Wallets)
@@ -24,7 +24,7 @@ namespace MyApi.Repositories.Implementations
             return person;
         }
 
-        public PaginatedResult<Person> List(PersonQueryFilter filter)
+        public PaginatedResult<PersonDTO> List(PersonQueryFilter filter)
         {
             var persons = _context.Persons.AsQueryable();
 
@@ -38,16 +38,31 @@ namespace MyApi.Repositories.Implementations
                 persons = persons.Where(x => x.IsActive == true);
 
             persons = ApplySortFilter(persons, filter);
+            int totalItens = persons.Count();
 
-            PaginatedResult<Person> p = new PaginatedResult<Person>()
+            persons = ApplyPagination(persons, filter);
+            var rows = persons.Select(x => new PersonDTO
             {
-                TotalItens = persons.Count(),
+                Id = x.Id,
+                Name = x.Name,
+                Email = x.Email,
+                Wallets = filter.IncludeWallets ? x.Wallets.Select(w => new PersonWalletDTO
+                {
+                    Id = w.Id,
+                    Name = w.Name,
+                    Description = w.Description,
+                    Balance = w.Balance,
+                    Income = w.Income
+                }).ToList() : new List<PersonWalletDTO>(),
+            }).ToList();
+
+            PaginatedResult<PersonDTO> p = new PaginatedResult<PersonDTO>()
+            {
+                TotalItens = totalItens,
                 CurrentPage = (int)filter.PageIndex,
                 PageSize = (int)filter.PageSize,
-                Sort = filter.SortBy + (filter.Descending ? " asc" : " desc"),
-                Rows = persons.Skip((filter.PageIndex - 1) * filter.PageSize)
-                                .Take(filter.PageSize)
-                                .ToList()
+                Sort = filter.SortBy + (!filter.Descending ? " asc" : " desc"),
+                Rows = rows
             };
 
             return p;
@@ -69,6 +84,13 @@ namespace MyApi.Repositories.Implementations
             }
 
             return query;
+        }
+
+        private IQueryable<Person> ApplyPagination(IQueryable<Person> query, PersonQueryFilter filter)
+        {
+            return query.AsNoTracking()
+                        .Skip((filter.PageIndex - 1) * filter.PageSize)
+                        .Take(filter.PageSize);
         }
 
         public Person Create(Person person)
