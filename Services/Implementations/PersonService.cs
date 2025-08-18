@@ -1,4 +1,6 @@
-﻿using MyApi.DTOs;
+﻿using System;
+using AutoMapper;
+using MyApi.DTOs;
 using MyApi.Models;
 using MyApi.Repositories.Interfaces;
 using MyApi.Services.Interfaces;
@@ -8,15 +10,18 @@ namespace MyApi.Services.Implementations
     public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
+        private readonly IMapper _mapper;
 
-        public PersonService(IPersonRepository personRepository)
+        public PersonService(IPersonRepository personRepository, IMapper mapper)
         {
             _personRepository = personRepository;
+            _mapper = mapper;
         }
 
-        public Person GetById(int id)
+        public PersonDTO GetById(int id)
         {
-            return _personRepository.GetById(id);
+            Person person = _personRepository.GetById(id);
+            return _mapper.Map<PersonDTO>(person); 
         }
 
         public PaginatedResult<PersonDTO> List(PersonQueryFilter filter)

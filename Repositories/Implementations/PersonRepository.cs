@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MyApi.Data;
 using MyApi.DTOs;
 using MyApi.Models;
@@ -9,10 +10,12 @@ namespace MyApi.Repositories.Implementations
     public class PersonRepository : IPersonRepository
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public PersonRepository(DataContext context)
+        public PersonRepository(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public Person? GetById(int id)
@@ -28,6 +31,9 @@ namespace MyApi.Repositories.Implementations
         {
             var persons = _context.Persons.AsQueryable();
 
+            if (filter.IncludeWallets)
+                persons = persons.Include(x => x.Wallets);
+
             if (!string.IsNullOrEmpty(filter.Name))
                 persons = persons.Where(x => x.Name.ToLower().Contains(filter.Name.ToLower()));
 
@@ -41,20 +47,8 @@ namespace MyApi.Repositories.Implementations
             int totalItens = persons.Count();
 
             persons = ApplyPagination(persons, filter);
-            var rows = persons.Select(x => new PersonDTO
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Email = x.Email,
-                Wallets = filter.IncludeWallets ? x.Wallets.Select(w => new PersonWalletDTO
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    Description = w.Description,
-                    Balance = w.Balance,
-                    Income = w.Income
-                }).ToList() : new List<PersonWalletDTO>(),
-            }).ToList();
+
+            var rows = persons.Select(x => _mapper.Map<PersonDTO>(x));
 
             PaginatedResult<PersonDTO> p = new PaginatedResult<PersonDTO>()
             {
@@ -62,7 +56,7 @@ namespace MyApi.Repositories.Implementations
                 CurrentPage = (int)filter.PageIndex,
                 PageSize = (int)filter.PageSize,
                 Sort = filter.SortBy + (!filter.Descending ? " asc" : " desc"),
-                Rows = rows
+                Rows = rows.ToList()
             };
 
             return p;

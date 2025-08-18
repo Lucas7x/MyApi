@@ -47,32 +47,16 @@ namespace MyApi.Controllers
         {
             try
             {
-                var person = _personService.GetById(id);
+                PersonDTO person = _personService.GetById(id);
 
                 if (person == null)
                     return NotFound("Registro não encontrado");
 
-                var personDto = new PersonDTO
-                {
-                    Id = person.Id,
-                    Name = person.Name,
-                    Email = person.Email,
-                    IsActive = person.IsActive,
-                    Wallets = person.Wallets.Select(w => new PersonWalletDTO
-                    {
-                        Id = w.Id,
-                        Name = w.Name,
-                        Description = w.Description,
-                        Balance = w.Balance,
-                        Income = w.Income
-                    }).ToList()
-                };
-
-                return Ok(personDto);
+                return Ok(person);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
         
