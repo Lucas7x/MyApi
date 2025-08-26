@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MyApi.Data;
 using MyApi.DTOs;
 using MyApi.Models;
@@ -9,10 +10,12 @@ namespace MyApi.Repositories.Implementations
     public class PersonRepository : IPersonRepository
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public PersonRepository(DataContext context)
+        public PersonRepository(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public Person? GetById(int id)
@@ -24,9 +27,12 @@ namespace MyApi.Repositories.Implementations
             return person;
         }
 
-        public PaginatedResult<PersonDTO> List(PersonQueryFilter filter)
+        public PaginatedResult<Person> List(PersonQueryFilter filter)
         {
             var persons = _context.Persons.AsQueryable();
+
+            if (filter.IncludeWallets)
+                persons = persons.Include(x => x.Wallets);
 
             if (!string.IsNullOrEmpty(filter.Name))
                 persons = persons.Where(x => x.Name.ToLower().Contains(filter.Name.ToLower()));
@@ -37,60 +43,9 @@ namespace MyApi.Repositories.Implementations
             if (!filter.ShowInative.HasValue || filter.ShowInative == false)
                 persons = persons.Where(x => x.IsActive == true);
 
-            persons = ApplySortFilter(persons, filter);
-            int totalItens = persons.Count();
+            PaginatedResult<Person> paginatedResult = new PaginatedResult<Person>(persons, filter.PageSize, filter.PageIndex, filter.SortBy, filter.Descending);
 
-            persons = ApplyPagination(persons, filter);
-            var rows = persons.Select(x => new PersonDTO
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Email = x.Email,
-                Wallets = filter.IncludeWallets ? x.Wallets.Select(w => new PersonWalletDTO
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    Description = w.Description,
-                    Balance = w.Balance,
-                    Income = w.Income
-                }).ToList() : new List<PersonWalletDTO>(),
-            }).ToList();
-
-            PaginatedResult<PersonDTO> p = new PaginatedResult<PersonDTO>()
-            {
-                TotalItens = totalItens,
-                CurrentPage = (int)filter.PageIndex,
-                PageSize = (int)filter.PageSize,
-                Sort = filter.SortBy + (!filter.Descending ? " asc" : " desc"),
-                Rows = rows
-            };
-
-            return p;
-        }
-
-        private IQueryable<Person> ApplySortFilter(IQueryable<Person> query, PersonQueryFilter filter)
-        {
-            switch (filter.SortBy)
-            {
-                case "name":
-                    query = filter.Descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name);
-                    break;
-                case "email":
-                    query = filter.Descending ? query.OrderByDescending(p => p.Email) : query.OrderBy(p => p.Email);
-                    break;
-                default:
-                    query = filter.Descending ? query.OrderByDescending(p => p.Id) : query.OrderBy(p => p.Id);
-                    break;
-            }
-
-            return query;
-        }
-
-        private IQueryable<Person> ApplyPagination(IQueryable<Person> query, PersonQueryFilter filter)
-        {
-            return query.AsNoTracking()
-                        .Skip((filter.PageIndex - 1) * filter.PageSize)
-                        .Take(filter.PageSize);
+            return paginatedResult;
         }
 
         public Person Create(Person person)
