@@ -10,7 +10,7 @@ namespace MyApi.DTOs
             PageSize = pageSize;
             CurrentPage = currentPage;
             SortOrder = !descending ? "desc" : "asc";
-            TotalItens = query.Count();
+            TotalItens = query.Count(); 
 
             SortBy = GetValidSortByField(SearchableFieldsHelper.GetFields<T>());
 
