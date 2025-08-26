@@ -26,7 +26,8 @@ namespace MyApi.Services.Implementations
 
         public PaginatedResult<PersonDTO> List(PersonQueryFilter filter)
         {
-            return _personRepository.List(filter);
+            var persons = _personRepository.List(filter);
+            return _mapper.Map<PaginatedResult<PersonDTO>>(persons);
         }
 
         public Person Create(PersonCreateDTO personDto)

@@ -27,7 +27,7 @@ namespace MyApi.Repositories.Implementations
             return person;
         }
 
-        public PaginatedResult<PersonDTO> List(PersonQueryFilter filter)
+        public PaginatedResult<Person> List(PersonQueryFilter filter)
         {
             var persons = _context.Persons.AsQueryable();
 
@@ -43,48 +43,9 @@ namespace MyApi.Repositories.Implementations
             if (!filter.ShowInative.HasValue || filter.ShowInative == false)
                 persons = persons.Where(x => x.IsActive == true);
 
-            persons = ApplySortFilter(persons, filter);
-            int totalItens = persons.Count();
+            PaginatedResult<Person> paginatedResult = new PaginatedResult<Person>(persons, filter.PageSize, filter.PageIndex, filter.SortBy, filter.Descending);
 
-            persons = ApplyPagination(persons, filter);
-
-            var rows = persons.Select(x => _mapper.Map<PersonDTO>(x));
-
-            PaginatedResult<PersonDTO> p = new PaginatedResult<PersonDTO>()
-            {
-                TotalItens = totalItens,
-                CurrentPage = (int)filter.PageIndex,
-                PageSize = (int)filter.PageSize,
-                Sort = filter.SortBy + (!filter.Descending ? " asc" : " desc"),
-                Rows = rows.ToList()
-            };
-
-            return p;
-        }
-
-        private IQueryable<Person> ApplySortFilter(IQueryable<Person> query, PersonQueryFilter filter)
-        {
-            switch (filter.SortBy)
-            {
-                case "name":
-                    query = filter.Descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name);
-                    break;
-                case "email":
-                    query = filter.Descending ? query.OrderByDescending(p => p.Email) : query.OrderBy(p => p.Email);
-                    break;
-                default:
-                    query = filter.Descending ? query.OrderByDescending(p => p.Id) : query.OrderBy(p => p.Id);
-                    break;
-            }
-
-            return query;
-        }
-
-        private IQueryable<Person> ApplyPagination(IQueryable<Person> query, PersonQueryFilter filter)
-        {
-            return query.AsNoTracking()
-                        .Skip((filter.PageIndex - 1) * filter.PageSize)
-                        .Take(filter.PageSize);
+            return paginatedResult;
         }
 
         public Person Create(Person person)

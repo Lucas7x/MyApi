@@ -36,9 +36,9 @@ namespace MyApi.Controllers
 
                 return Ok(persons);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
 

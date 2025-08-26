@@ -10,6 +10,7 @@ namespace MyApi.Mapping
         {
             CreateMap<Person, PersonDTO>().ReverseMap();
             CreateMap<Wallet, PersonWalletDTO>().ReverseMap();
+            CreateMap<PaginatedResult<Person>, PaginatedResult<PersonDTO>>().ReverseMap();
         }
     }
 }
