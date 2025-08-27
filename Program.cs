@@ -1,3 +1,4 @@
+using MyApi.Extensions;
 using MyApi.Services;
 using MyWallet.Application.Interfaces;
 using MyWallet.Application.Services;
@@ -16,7 +17,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DataContext>();
+// Configure DataContext
+builder.Services.ConfigureDatabaseContext(builder.Configuration);
 
 // Registering Services and Repositories
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
