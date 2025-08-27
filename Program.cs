@@ -1,9 +1,8 @@
-using MyApi.Data;
-using MyApi.Repositories.Implementations;
-using MyApi.Repositories.Interfaces;
 using MyApi.Services;
-using MyApi.Services.Implementations;
-using MyApi.Services.Interfaces;
+using MyWallet.Application.Interfaces;
+using MyWallet.Application.Services;
+using MyWallet.Infrastructure.Database;
+using MyWallet.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +22,7 @@ builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 
-builder.Services.AddScoped<DebtInService>();
+//builder.Services.AddScoped<DebtInService>();
 
 var app = builder.Build();
 

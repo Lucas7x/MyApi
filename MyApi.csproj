@@ -23,4 +23,9 @@
     <Folder Include="Extensions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyWallet.Application\MyWallet.Application.csproj" />
+    <ProjectReference Include="..\MyWallet.Infrastructure\MyWallet.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

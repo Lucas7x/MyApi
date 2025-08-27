@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyApi.DTOs;
-using MyApi.Models;
-using MyApi.Services.Interfaces;
+using MyWallet.Application.DTOs;
+using MyWallet.Application.Interfaces;
+using MyWallet.Application.QueryFilters;
+using MyWallet.Domain.Entities;
 
 namespace MyApi.Controllers
 {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyApi.DTOs;
-using MyApi.Services;
+using MyWallet.Application.DTOs;
 
 namespace MyApi.Controllers
 {
@@ -8,26 +7,26 @@ namespace MyApi.Controllers
     [Route("[Controller]")]
     public class DebtInsController : ControllerBase
     {
-        private readonly DebtInService _service;
+        //private readonly DebtInService _service;
 
-        public DebtInsController(DebtInService service)
-        {
-            _service = service;
-        }
+        //public DebtInsController(DebtInService service)
+        //{
+        //    _service = service;
+        //}
 
         [HttpPost]
         public IActionResult Post([FromBody] DebtInCreateDTO dto)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                //if (!ModelState.IsValid)
+                //    return BadRequest(ModelState);
 
-                var debtInId = _service.Create(dto);
+                //var debtInId = _service.Create(dto);
 
                 return Ok(new
                 {
-                    id = debtInId,
+                    //id = debtInId,
                 });
             }
             catch (ArgumentException ex)
@@ -45,11 +44,11 @@ namespace MyApi.Controllers
         {
             try
             {
-                var debtIns = _service.GetAll(description, debtorId, initialDate, finalDate);
+                //var debtIns = _service.GetAll(description, debtorId, initialDate, finalDate);
 
                 return Ok(new
                 {
-                    debtIns
+                    //debtIns
                 });
             }
             catch(Exception ex)

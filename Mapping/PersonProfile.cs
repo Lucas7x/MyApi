@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MyApi.DTOs;
-using MyApi.Models;
+using MyWallet.Application.DTOs;
+using MyWallet.Domain.Entities;
 
 namespace MyApi.Mapping
 {
