@@ -9,7 +9,7 @@ namespace MyWallet.Application.DTOs
         {
             PageSize = pageSize;
             CurrentPage = currentPage;
-            SortOrder = !descending ? "desc" : "asc";
+            SortOrder = descending ? "desc" : "asc";
             TotalItens = query.Count();
 
             SortBy = GetValidSortByField(SearchableFieldsHelper.GetFields<T>());
