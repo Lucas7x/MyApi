@@ -17,6 +17,7 @@ function App() {
   })
   const [modalIncludePerson, setModalIncludePerson] = useState(false);
   const [modalUpdatePerson, setModalUpdatePerson] = useState(false);
+  const [modalDeletePerson, setModalDeletePerson] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   // --------------------------------------------------------------------------------
@@ -47,10 +48,14 @@ function App() {
     setModalUpdatePerson(!modalUpdatePerson);
   }
 
+  const openCloseModalDeletePerson = () => {
+    setModalDeletePerson(!modalDeletePerson);
+  } 
+
   const updateOrDeletePerson = (person, option) => {
     setSelectedPerson(person);
-    (option === 'update') &&
-      openCloseModalUpdatePerson();
+    (option === 'update') ?
+      openCloseModalUpdatePerson() : openCloseModalDeletePerson();
   }
 
   const postPerson = async() => {
@@ -89,6 +94,23 @@ function App() {
                 .catch(error => {
                   console.log(error);
                 })
+  }
+
+  const deletePerson = async() => {
+    await axios.delete(baseUrl + "/" + (selectedPerson && selectedPerson.id))
+                .then(response => {
+                  var responseData = response.data;
+                  setData(
+                    data.filter(person => person.id !== responseData.id)
+                  );
+                  
+                  openCloseModalDeletePerson();
+                  setSuccessMessage("Pessoa excluida com sucesso!");
+                  setTimeout(() => setSuccessMessage("", 3000));
+                })
+                .catch(error => {
+                  console.log(error);
+                });
   }
 
   useEffect(
@@ -152,7 +174,7 @@ function App() {
           <button className='btn btn-danger' onClick={() => openCloseModalIncludePerson()}>Cancelar</button>
         </ModalFooter>
       </Modal>
-
+      
       <Modal isOpen={modalUpdatePerson} >
         <ModalHeader>Alterar Pessoa</ModalHeader>
         <ModalBody>
@@ -189,6 +211,16 @@ function App() {
         <ModalFooter>
           <button className='btn btn-primary' onClick={() => patchPerson()} >Alterar</button>
           <button className='btn btn-danger' onClick={() => openCloseModalUpdatePerson()}>Cancelar</button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal isOpen={modalDeletePerson}>
+        <ModalBody>
+          Deseja realmente excluir este registro: {selectedPerson && selectedPerson.name}? 
+        </ModalBody>
+        <ModalFooter>
+          <button className='btn btn-danger' onClick={() => deletePerson()}>Sim</button>
+          <button className='btn btn-secondary' onClick={() => openCloseModalDeletePerson()}>Não</button>
         </ModalFooter>
       </Modal>
     </div>
