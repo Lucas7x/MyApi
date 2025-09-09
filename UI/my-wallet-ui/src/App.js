@@ -10,6 +10,7 @@ function App() {
 
   // states --------------------------------------------------------------------------------
   const [data, setData] = useState([]);
+  const [updateData, setUpdateData] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState({
     id: '',
     name: '',
@@ -65,6 +66,8 @@ function App() {
                   setData(data.concat(
                     response.data
                   ));
+                  setUpdateData(true);
+
                   openCloseModalIncludePerson();
                   setSuccessMessage("Pessoa cadastrada com sucesso!");
                   setTimeout(() => setSuccessMessage(""), 3000); // limpa após 3s
@@ -86,6 +89,7 @@ function App() {
                       person.email = responseData.email;
                     }
                   });
+                  setUpdateData(true);
 
                   openCloseModalUpdatePerson();
                   setSuccessMessage("Pessoa alterada com sucesso!");
@@ -103,6 +107,7 @@ function App() {
                   setData(
                     data.filter(person => person.id !== responseData.id)
                   );
+                  setUpdateData(true);
                   
                   openCloseModalDeletePerson();
                   setSuccessMessage("Pessoa excluida com sucesso!");
@@ -115,8 +120,11 @@ function App() {
 
   useEffect(
     () => {
-      getPersons()
-    }, []
+      if(updateData) {
+        getPersons();
+        setUpdateData(false);
+      }
+    }, [updateData]
   );
 
   return (
