@@ -16,6 +16,7 @@ function App() {
     email: ''
   })
   const [modalIncludePerson, setModalIncludePerson] = useState(false);
+  const [modalUpdatePerson, setModalUpdatePerson] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   // --------------------------------------------------------------------------------
@@ -42,6 +43,16 @@ function App() {
     setModalIncludePerson(!modalIncludePerson);
   }
 
+  const openCloseModalUpdatePerson = () => {
+    setModalUpdatePerson(!modalUpdatePerson);
+  }
+
+  const updateOrDeletePerson = (person, option) => {
+    setSelectedPerson(person);
+    (option === 'update') &&
+      openCloseModalUpdatePerson();
+  }
+
   const postPerson = async() => {
     delete selectedPerson.id;
     await axios.post(baseUrl, selectedPerson)
@@ -52,6 +63,28 @@ function App() {
                   openCloseModalIncludePerson();
                   setSuccessMessage("Pessoa cadastrada com sucesso!");
                   setTimeout(() => setSuccessMessage(""), 3000); // limpa após 3s
+                })
+                .catch(error => {
+                  console.log(error);
+                })
+  }
+
+  const patchPerson = async() => {
+    await axios.patch(baseUrl + "/" + selectedPerson.id, selectedPerson)
+                .then(response => {
+                  var responseData = response.data;
+                  var auxData = data;
+                  
+                  auxData.map(person => {
+                    if(person.id === selectedPerson.id) {
+                      person.name = responseData.name;
+                      person.email = responseData.email;
+                    }
+                  });
+
+                  openCloseModalUpdatePerson();
+                  setSuccessMessage("Pessoa alterada com sucesso!");
+                  setTimeout(() => setSuccessMessage("", 3000));
                 })
                 .catch(error => {
                   console.log(error);
@@ -90,8 +123,8 @@ function App() {
                   <td>{person.name}</td>
                   <td>{person.email}</td>
                   <td>
-                    <button className='btn btn-primary'>Editar</button> {"    "}
-                    <button className='btn btn-danger'>Excluir</button>
+                    <button className='btn btn-primary' onClick={() => updateOrDeletePerson(person, "update")}>Editar</button> {"    "}
+                    <button className='btn btn-danger' onClick={() => updateOrDeletePerson(person, "delete")}>Excluir</button>
                   </td>
                 </tr>
               ))
@@ -117,6 +150,45 @@ function App() {
         <ModalFooter>
           <button className='btn btn-primary' onClick={() => postPerson()} >Incluir</button>
           <button className='btn btn-danger' onClick={() => openCloseModalIncludePerson()}>Cancelar</button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal isOpen={modalUpdatePerson} >
+        <ModalHeader>Alterar Pessoa</ModalHeader>
+        <ModalBody>
+          <div className='form-group'>
+            <label>Id:</label>
+            <br/>
+            <input  type='text' 
+                    className='form-control' 
+                    name='id' 
+                    value={selectedPerson && selectedPerson.id}
+                    readOnly
+                    onChange={handleChange} />
+            <br />
+            <label>Nome*:</label>
+            <br/>
+            <input  type='text' 
+                    className='form-control' 
+                    name='name' 
+                    required 
+                    value={selectedPerson && selectedPerson.name}
+                    onChange={handleChange} />
+            <br />
+            <label>E-mail*:</label>
+            <br />
+            <input  type='text' 
+                    className='form-control' 
+                    value={selectedPerson && selectedPerson.email}
+                    name='email' 
+                    required
+                    onChange={handleChange} />
+            <br />
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <button className='btn btn-primary' onClick={() => patchPerson()} >Alterar</button>
+          <button className='btn btn-danger' onClick={() => openCloseModalUpdatePerson()}>Cancelar</button>
         </ModalFooter>
       </Modal>
     </div>
