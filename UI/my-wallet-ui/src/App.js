@@ -20,6 +20,7 @@ function App() {
   const [modalUpdatePerson, setModalUpdatePerson] = useState(false);
   const [modalDeletePerson, setModalDeletePerson] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errors, setErrors] = useState({});
 
   // --------------------------------------------------------------------------------
   const getPersons = async()=> 
@@ -42,10 +43,12 @@ function App() {
   }
 
   const openCloseModalIncludePerson = () => {
+    setErrors({});
     setModalIncludePerson(!modalIncludePerson);
   }
 
   const openCloseModalUpdatePerson = () => {
+    setErrors({});
     setModalUpdatePerson(!modalUpdatePerson);
   }
 
@@ -71,10 +74,15 @@ function App() {
                   openCloseModalIncludePerson();
                   setSuccessMessage("Pessoa cadastrada com sucesso!");
                   setTimeout(() => setSuccessMessage(""), 3000); // limpa após 3s
+                  setErrors({});
                 })
                 .catch(error => {
-                  console.log(error);
-                })
+                  if(error.response && error.response.status === 400) {
+                    setErrors(error.response.data.errors);
+                  } else {
+                    console.log(error.response);
+                  }
+                });
   }
 
   const patchPerson = async() => {
@@ -94,9 +102,14 @@ function App() {
                   openCloseModalUpdatePerson();
                   setSuccessMessage("Pessoa alterada com sucesso!");
                   setTimeout(() => setSuccessMessage("", 3000));
+                  setErrors({});
                 })
                 .catch(error => {
-                  console.log(error);
+                  if(error.response && error.response.status === 400){
+                    setErrors(error.response.data.errors)
+                  } else {
+                    console.log(error.response);
+                  }
                 })
   }
 
@@ -130,7 +143,7 @@ function App() {
   return (
     <div className="person-container">
       <header>
-        {successMessage && <div className="alert alert-success">{successMessage}</div>}
+        {successMessage && <Modal className="alert alert-success">{successMessage}</Modal>}
         <h1>Cadastro de pessoas</h1>
         
       </header>
@@ -169,11 +182,29 @@ function App() {
           <div className='form-group'>
             <label>Nome*:</label>
             <br/>
-            <input type='text' className='form-control' name='name' required onChange={handleChange} />
+            <input  type='text' 
+                    className = {`form-control ${errors.Name ? "is-invalid" : ""}`}
+                    name='name' 
+                    required 
+                    onChange={handleChange} />
+            {errors.Name && (
+              <div className='invalid-feedback custom-feedback'>
+                {errors.Name[0]}
+              </div>
+            )}
             <br />
             <label>E-mail*:</label>
             <br />
-            <input type='text' className='form-control' name='email' required onChange={handleChange} />
+            <input  type='text' 
+                    className = {`form-control ${errors.Email ? "is-invalid" : ""}`}
+                    name='email' 
+                    required 
+                    onChange={handleChange} />
+            {errors.Email && (
+              <div className='invalid-feedback custom-feedback'>
+                {errors.Email[0]}
+              </div>
+            )}
             <br />
           </div>
         </ModalBody>
@@ -190,7 +221,7 @@ function App() {
             <label>Id:</label>
             <br/>
             <input  type='text' 
-                    className='form-control' 
+                    className='form-control'
                     name='id' 
                     value={selectedPerson && selectedPerson.id}
                     readOnly
@@ -199,20 +230,30 @@ function App() {
             <label>Nome*:</label>
             <br/>
             <input  type='text' 
-                    className='form-control' 
+                    className={`form-control ${errors.Name ? "is-invalid" : "" }`}
                     name='name' 
                     required 
                     value={selectedPerson && selectedPerson.name}
                     onChange={handleChange} />
+            {errors.Name && (
+              <div className='invalid-feedback custom-feedback'>
+                {errors.Name[0]}
+              </div>
+            )}
             <br />
             <label>E-mail*:</label>
             <br />
             <input  type='text' 
-                    className='form-control' 
+                    className={`form-control ${errors.Email ? "is-invalid" : "" }`} 
                     value={selectedPerson && selectedPerson.email}
                     name='email' 
                     required
                     onChange={handleChange} />
+            {errors.Email && (
+              <div className='invalid-feedback custom-feedback'>
+                {errors.Email[0]}
+              </div>
+            )}
             <br />
           </div>
         </ModalBody>

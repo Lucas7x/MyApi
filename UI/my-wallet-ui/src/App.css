@@ -84,3 +84,8 @@ table tr:hover {
   background-color: #f1f1f1;
   transition: background 0.3s;
 }
+
+.invalid-feedback.custom-feedback {
+  font-size: 0.75rem;
+  color: #dc3545; /* mantém o vermelho do bootstrap */
+}
