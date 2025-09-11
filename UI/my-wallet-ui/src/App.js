@@ -16,17 +16,26 @@ function App() {
     name: '',
     email: ''
   })
+
   const [modalIncludePerson, setModalIncludePerson] = useState(false);
   const [modalUpdatePerson, setModalUpdatePerson] = useState(false);
   const [modalDeletePerson, setModalDeletePerson] = useState(false);
+
   const [successMessage, setSuccessMessage] = useState('');
   const [errors, setErrors] = useState({});
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+
   // --------------------------------------------------------------------------------
-  const getPersons = async () => {
-    await axios.get(baseUrl)
+  const getPersons = async (pageIndex = currentPage, size = pageSize) => {
+    await axios.get(`${baseUrl}?pageIndex=${pageIndex}&pageSize=${size}`)
       .then(response => {
         setData(response.data.rows);
+        setCurrentPage(response.data.currentPage);
+        setPageSize(response.data.pageSize);
+        setTotalPages(response.data.totalPages);
       })
       .catch(error => {
         console.log(error);
@@ -60,6 +69,30 @@ function App() {
     (option === 'update') ?
       openCloseModalUpdatePerson() : openCloseModalDeletePerson();
   }
+
+  // Pagination
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      getPersons(currentPage + 1, pageSize);
+    }
+  }
+
+  const previousPage = () => {
+    if (currentPage > 1) {
+      getPersons(currentPage - 1, pageSize);
+    }
+  }
+
+  const changePageSize = (e) => {
+    console.log("changePageSize");
+    const newSize = parseInt(e.target.value);
+    console.log(newSize);
+    setPageSize(newSize);
+    console.log(pageSize);
+    getPersons(1, newSize);
+  }
+
+  // API requests
 
   const postPerson = async () => {
     delete selectedPerson.id;
@@ -131,7 +164,7 @@ function App() {
   useEffect(
     () => {
       if (updateData) {
-        getPersons();
+        getPersons(currentPage, pageSize);
         setUpdateData(false);
       }
     }, [updateData]
@@ -158,6 +191,8 @@ function App() {
           </div>
         </div>
       )}
+
+
       <main className='person-container'>
         <button className='btn btn-success' onClick={() => openCloseModalIncludePerson()}>Incluir Nova Pessoa</button>
         <table className='table table-bordered'>
@@ -185,6 +220,37 @@ function App() {
             }
           </tbody>
         </table>
+        <div className='d-flex justify-content-between align-items-center mt-3'>
+          <div>
+            <button
+              className='btn btn-secondary me-2'
+              onClick={previousPage}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </button>
+            <button
+              className='btn btn-secondary'
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+            >
+              Próxima
+            </button>
+          </div>
+
+          <div>Página {currentPage}  de {totalPages}</div>
+
+          <div>
+            <label className='me-2'>Itens por página:</label>
+            <select value={pageSize} onChange={changePageSize} className='form-select d-inline w-auto'>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+        </div>
+
       </main>
 
       <Modal isOpen={modalIncludePerson} >
