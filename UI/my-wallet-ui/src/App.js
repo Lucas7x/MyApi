@@ -28,9 +28,11 @@ function App() {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
+  const [filterName, setFilterName] = useState("");
+
   // --------------------------------------------------------------------------------
-  const getPersons = async (pageIndex = currentPage, size = pageSize) => {
-    await axios.get(`${baseUrl}?pageIndex=${pageIndex}&pageSize=${size}`)
+  const getPersons = async (pageIndex = currentPage, size = pageSize, filter = filterName) => {
+    await axios.get(`${baseUrl}?pageIndex=${pageIndex}&pageSize=${size}&name=${filter}`)
       .then(response => {
         setData(response.data.rows);
         setCurrentPage(response.data.currentPage);
@@ -164,7 +166,7 @@ function App() {
   useEffect(
     () => {
       if (updateData) {
-        getPersons(currentPage, pageSize);
+        getPersons(currentPage, pageSize, filterName);
         setUpdateData(false);
       }
     }, [updateData]
@@ -175,6 +177,7 @@ function App() {
       <header>
         <h1>Cadastro de pessoas</h1>
       </header>
+
       {successMessage && (
         <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 9999 }}>
           <div className="toast show align-items-center text-bg-success border-0">
@@ -194,7 +197,25 @@ function App() {
 
 
       <main className='person-container'>
-        <button className='btn btn-success' onClick={() => openCloseModalIncludePerson()}>Incluir Nova Pessoa</button>
+        <div className='d-flex align-items-center mb-3 gap-2'>
+
+          <input type='text'
+            className='form-control me-2'
+            placeholder='Filtrar por nome'
+            value={filterName}
+            onChange={(e) => setFilterName(e.target.value)}
+          />
+          <button className="btn btn-primary" onClick={() => getPersons(currentPage, pageSize)}>
+            Buscar
+          </button>
+        </div>
+        <div className='d-flex justify-content-end mb-3'>
+          <button
+            className='btn btn-success'
+            onClick={openCloseModalIncludePerson}>Incluir Nova Pessoa
+          </button>
+        </div>
+
         <table className='table table-bordered'>
           <thead>
             <tr>
@@ -220,6 +241,7 @@ function App() {
             }
           </tbody>
         </table>
+
         <div className='d-flex justify-content-between align-items-center mt-3'>
           <div>
             <button

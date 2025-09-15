@@ -28,63 +28,13 @@
   width: 100%;
 }
 
-.person-container header img {
-  height: 50px;
-}
-
-/* Botão de adicionar */
-.person-container header button {
-  height: 45px;
-  width: 220px;
-  border-radius: 8px;
-  border: none;
-  background: #2e7d32;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.person-container header button:hover {
-  background: #1b5e20;
-  transform: scale(1.05);
-}
-
 /* Corpo */
 .person-container main {
-  padding: 20px;
+  padding: 30px;
   border-radius: 8px;
 }
 
-/* Tabela */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-table th {
-  background-color: #f4511e;
-  color: white;
-  text-align: left;
-  padding: 12px;
-}
-
-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* Linhas alternadas */
-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-table tr:hover {
-  background-color: #f1f1f1;
-  transition: background 0.3s;
-}
-
+/* Mensagem de erro */
 .invalid-feedback.custom-feedback {
   font-size: 0.75rem;
   color: #dc3545; /* mantém o vermelho do bootstrap */
