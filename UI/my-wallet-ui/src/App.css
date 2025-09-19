@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .App {
   text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,7 +27,11 @@
   background-color: #f4511e;
   color: white;
   padding: 15px 20px;
+  justify-content: center; /* centraliza */
+  width: 100%;          /* garante largura total */
+  box-sizing: border-box; /* conta padding na largura */
 }
+
 
 .person-container header h1 {
   text-align: center;
@@ -32,6 +42,25 @@
 .person-container main {
   padding: 30px;
   border-radius: 8px;
+  overflow-x: auto;  /* scroll horizontal se precisar */
+}
+
+/* Tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; /* deixa colunas ajustarem tamanho */
+
+}
+
+.table-container {
+  max-height: 400px; /* altura máxima */
+  overflow-y: auto;
+}
+
+.table-buttons {
+  white-space: nowrap;
+  width: 1%;
 }
 
 /* Mensagem de erro */

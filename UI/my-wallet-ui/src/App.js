@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { useEffect, useState } from 'react';
+import Navbar from './components/Navbar';
 
 function App() {
 
@@ -174,9 +175,7 @@ function App() {
 
   return (
     <div className="person-container">
-      <header>
-        <h1>Cadastro de pessoas</h1>
-      </header>
+      <Navbar />
 
       {successMessage && (
         <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 9999 }}>
@@ -216,13 +215,13 @@ function App() {
           </button>
         </div>
 
-        <table className='table table-bordered'>
+        <table className='table table-bordered table-container'>
           <thead>
             <tr>
               <th>Id</th>
               <th>Nome</th>
               <th>E-mail</th>
-              <th>Operações</th>
+              <th className='table-buttons'>Operações</th>
             </tr>
           </thead>
           <tbody>
@@ -232,7 +231,7 @@ function App() {
                   <td>{person.id}</td>
                   <td>{person.name}</td>
                   <td>{person.email}</td>
-                  <td>
+                  <td className='table-buttons'>
                     <button className='btn btn-primary' onClick={() => updateOrDeletePerson(person, "update")}>Editar</button> {"    "}
                     <button className='btn btn-danger' onClick={() => updateOrDeletePerson(person, "delete")}>Excluir</button>
                   </td>
@@ -366,7 +365,7 @@ function App() {
         <ModalBody>
           Deseja realmente excluir este registro: {selectedPerson && selectedPerson.name}?
         </ModalBody>
-        <ModalFooter>
+        <ModalFooter className='w-auto'>
           <button className='btn btn-danger' onClick={() => deletePerson()}>Sim</button>
           <button className='btn btn-secondary' onClick={() => openCloseModalDeletePerson()}>Não</button>
         </ModalFooter>
