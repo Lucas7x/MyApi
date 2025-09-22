@@ -9,6 +9,7 @@ namespace MyApi.Mapping
         public PersonProfile()
         {
             CreateMap<Person, PersonDTO>().ReverseMap();
+            CreateMap<Person, PersonUpdateDTO>().ReverseMap();
             CreateMap<Wallet, PersonWalletDTO>().ReverseMap();
             CreateMap<PaginatedResult<Person>, PaginatedResult<PersonDTO>>().ReverseMap();
         }

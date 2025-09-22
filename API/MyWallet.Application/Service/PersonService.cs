@@ -50,8 +50,7 @@ namespace MyWallet.Application.Services
             if (person == null)
                 throw new KeyNotFoundException("Pessoa não encontrada");
 
-            if (personDto.Name != null) person.Name = personDto.Name;
-            if (personDto.Email != null) person.Email = personDto.Email;
+            _mapper.Map(personDto, person);
 
             _personRepository.Update(person);
             _personRepository.SaveChanges();

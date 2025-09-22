@@ -13,9 +13,9 @@ function App() {
   const [data, setData] = useState([]);
   const [updateData, setUpdateData] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState({
-    id: '',
-    name: '',
-    email: ''
+    id: null,
+    name: null,
+    email: null
   })
 
   const [modalIncludePerson, setModalIncludePerson] = useState(false);
@@ -49,7 +49,7 @@ function App() {
     const { name, value } = e.target;
     setSelectedPerson({
       ...selectedPerson,
-      [name]: value
+      [name]: value === "" ? null : value
     });
   }
 
@@ -120,8 +120,8 @@ function App() {
       });
   }
 
-  const patchPerson = async () => {
-    await axios.patch(baseUrl + "/" + selectedPerson.id, selectedPerson)
+  const putPerson = async () => {
+    await axios.put(baseUrl + "/" + selectedPerson.id, selectedPerson)
       .then(response => {
         var responseData = response.data;
 
@@ -296,7 +296,6 @@ function App() {
             <input type='text'
               className={`form-control ${errors.Email ? "is-invalid" : ""}`}
               name='email'
-              required
               onChange={handleChange} />
             {errors.Email && (
               <div className='invalid-feedback custom-feedback'>
@@ -356,7 +355,7 @@ function App() {
           </div>
         </ModalBody>
         <ModalFooter>
-          <button className='btn btn-primary' onClick={() => patchPerson()} >Alterar</button>
+          <button className='btn btn-primary' onClick={() => putPerson()} >Alterar</button>
           <button className='btn btn-danger' onClick={() => openCloseModalUpdatePerson()}>Cancelar</button>
         </ModalFooter>
       </Modal>

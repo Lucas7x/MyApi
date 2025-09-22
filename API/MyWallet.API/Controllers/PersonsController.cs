@@ -80,8 +80,8 @@ namespace MyApi.Controllers
         }
 
 
-        [HttpPatch("{id:int}")]
-        public IActionResult Patch([FromBody] PersonUpdateDTO dto, [FromRoute] int id)
+        [HttpPut("{id:int}")]
+        public IActionResult Put([FromBody] PersonUpdateDTO dto, [FromRoute] int id)
         {
             try
             {
