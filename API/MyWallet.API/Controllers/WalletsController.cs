@@ -44,8 +44,7 @@ namespace MyApi.Controllers
                     {
                         Id = x.Owner.Id,
                         Name = x.Owner.Name,
-                        Email = x.Owner.Email,
-                        IsActive = x.Owner.IsActive
+                        Email = x.Owner.Email
                     }
                 }).ToList();
 
@@ -82,8 +81,7 @@ namespace MyApi.Controllers
                     {
                         Id = wallet.Owner.Id,
                         Name = wallet.Owner.Name,
-                        Email = wallet.Owner.Email,
-                        IsActive = wallet.Owner.IsActive
+                        Email = wallet.Owner.Email
                     }
                 };
 
