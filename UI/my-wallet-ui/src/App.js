@@ -38,7 +38,7 @@ function App() {
         setData(response.data.rows);
         setCurrentPage(response.data.currentPage);
         setPageSize(response.data.pageSize);
-        setTotalPages(response.data.totalPages);
+        setTotalPages((response.data.totalPages > 0) ? response.data.totalPages : 1);
       })
       .catch(error => {
         console.log(error);
@@ -204,7 +204,7 @@ function App() {
             value={filterName}
             onChange={(e) => setFilterName(e.target.value)}
           />
-          <button className="btn btn-primary" onClick={() => getPersons(currentPage, pageSize)}>
+          <button className="btn btn-primary" onClick={() => getPersons(1, pageSize)}>
             Buscar
           </button>
         </div>
