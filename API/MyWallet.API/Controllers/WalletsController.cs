@@ -43,8 +43,7 @@ namespace MyApi.Controllers
                     Owner = new PersonDTO
                     {
                         Id = x.Owner.Id,
-                        Name = x.Owner.Name,
-                        Email = x.Owner.Email
+                        Name = x.Owner.Name
                     }
                 }).ToList();
 
@@ -80,8 +79,7 @@ namespace MyApi.Controllers
                     Owner = new PersonDTO
                     {
                         Id = wallet.Owner.Id,
-                        Name = wallet.Owner.Name,
-                        Email = wallet.Owner.Email
+                        Name = wallet.Owner.Name
                     }
                 };
 

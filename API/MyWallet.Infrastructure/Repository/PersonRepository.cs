@@ -39,9 +39,6 @@ namespace MyWallet.Infrastructure.Repository
             if (!string.IsNullOrEmpty(filter.Name))
                 persons = persons.Where(x => x.Name.ToLower().Contains(filter.Name.ToLower()));
 
-            if (!string.IsNullOrEmpty(filter.Email))
-                persons = persons.Where(x => x.Email.ToLower().Contains(filter.Email.ToLower()));
-
             if (!filter.ShowInative.HasValue || filter.ShowInative == false)
                 persons = persons.Where(x => x.DeletedAt == null);
 
