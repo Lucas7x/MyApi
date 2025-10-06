@@ -19,7 +19,7 @@ namespace MyWallet.Application.Services
 
         public PersonDTO GetById(int id)
         {
-            Person person = _personRepository.GetById(id);
+            Person? person = _personRepository.GetById(id);
             return _mapper.Map<PersonDTO>(person); 
         }
 
@@ -31,12 +31,7 @@ namespace MyWallet.Application.Services
 
         public Person Create(PersonCreateDTO personDto)
         {
-            Person person = new Person
-            {
-                Name = personDto.Name,
-                Email = personDto.Email,
-                IsActive = true
-            };
+            Person person = _mapper.Map<Person>(personDto);
 
             _personRepository.Create(person);
             _personRepository.SaveChanges();
@@ -46,11 +41,12 @@ namespace MyWallet.Application.Services
         
         public Person Update(int id, PersonUpdateDTO personDto)
         {
-            Person person = _personRepository.GetById(id);
+            Person? person = _personRepository.GetById(id);
             if (person == null)
                 throw new KeyNotFoundException("Pessoa não encontrada");
 
             _mapper.Map(personDto, person);
+            person.UpdatedAt = DateTime.Now;
 
             _personRepository.Update(person);
             _personRepository.SaveChanges();

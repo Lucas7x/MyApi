@@ -23,6 +23,7 @@ namespace MyWallet.Infrastructure.Repository
         {
             var person = _context.Persons
                     .Include(p => p.Wallets)
+                    .Where(x => x.DeletedAt == null)
                     .FirstOrDefault(p => p.Id == id);
 
             return person;
@@ -38,11 +39,8 @@ namespace MyWallet.Infrastructure.Repository
             if (!string.IsNullOrEmpty(filter.Name))
                 persons = persons.Where(x => x.Name.ToLower().Contains(filter.Name.ToLower()));
 
-            if (!string.IsNullOrEmpty(filter.Email))
-                persons = persons.Where(x => x.Email.ToLower().Contains(filter.Email.ToLower()));
-
             if (!filter.ShowInative.HasValue || filter.ShowInative == false)
-                persons = persons.Where(x => x.IsActive == true);
+                persons = persons.Where(x => x.DeletedAt == null);
 
             PaginatedResult<Person> paginatedResult = new PaginatedResult<Person>(persons, filter.PageSize, filter.PageIndex, filter.SortBy, filter.Descending);
 
@@ -64,7 +62,7 @@ namespace MyWallet.Infrastructure.Repository
 
         public Person Delete(Person person)
         {
-            person.IsActive = false;
+            person.DeletedAt = DateTime.Now;
 
             return person;
         }

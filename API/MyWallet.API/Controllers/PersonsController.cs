@@ -28,7 +28,6 @@ namespace MyApi.Controllers
                     PageIndex = pageIndex,
                     PageSize = pageSize,
                     Name = name,
-                    Email = email,
                     ShowInative = showInative,
                     IncludeWallets = includeWallets
                 };
