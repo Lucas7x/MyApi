@@ -14,8 +14,7 @@ function App() {
   const [updateData, setUpdateData] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState({
     id: null,
-    name: null,
-    email: null
+    name: null
   })
 
   const [modalIncludePerson, setModalIncludePerson] = useState(false);
@@ -127,7 +126,7 @@ function App() {
 
         setData(data.map(person =>
           person.id === selectedPerson.id
-            ? { ...person, name: responseData.name, email: responseData.email }
+            ? { ...person, name: responseData.name }
             : person
         ));
         setUpdateData(true);
@@ -220,7 +219,6 @@ function App() {
             <tr>
               <th>Id</th>
               <th>Nome</th>
-              <th>E-mail</th>
               <th className='table-buttons'>Operações</th>
             </tr>
           </thead>
@@ -230,7 +228,6 @@ function App() {
                 <tr key={person.id}>
                   <td>{person.id}</td>
                   <td>{person.name}</td>
-                  <td>{person.email}</td>
                   <td className='table-buttons'>
                     <button className='btn btn-primary' onClick={() => updateOrDeletePerson(person, "update")}>Editar</button> {"    "}
                     <button className='btn btn-danger' onClick={() => updateOrDeletePerson(person, "delete")}>Excluir</button>
@@ -291,17 +288,6 @@ function App() {
               </div>
             )}
             <br />
-            <label>E-mail*:</label>
-            <br />
-            <input type='text'
-              className={`form-control ${errors.Email ? "is-invalid" : ""}`}
-              name='email'
-              onChange={handleChange} />
-            {errors.Email && (
-              <div className='invalid-feedback custom-feedback'>
-                {errors.Email[0]}
-              </div>
-            )}
             <br />
           </div>
         </ModalBody>
@@ -338,19 +324,6 @@ function App() {
               </div>
             )}
             <br />
-            <label>E-mail*:</label>
-            <br />
-            <input type='text'
-              className={`form-control ${errors.Email ? "is-invalid" : ""}`}
-              value={selectedPerson && selectedPerson.email}
-              name='email'
-              required
-              onChange={handleChange} />
-            {errors.Email && (
-              <div className='invalid-feedback custom-feedback'>
-                {errors.Email[0]}
-              </div>
-            )}
             <br />
           </div>
         </ModalBody>
