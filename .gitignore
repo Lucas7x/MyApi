@@ -371,4 +371,4 @@ FodyWeavers.xsd
 [Bb]in/
 
 # Migration Files
-./API/MyWallet.API/Migration
+./API/MyWallet.Infrastructure/Migration
