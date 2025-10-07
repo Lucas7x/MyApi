@@ -18,19 +18,10 @@ namespace MyApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] string? sortBy, bool descending, int pageIndex, int pageSize, string? name, string? email, bool showInative, bool includeWallets)
+        public IActionResult Get([FromQuery] PersonQueryFilter filter)
         {
             try
             {
-                PersonQueryFilter filter = new PersonQueryFilter {
-                    SortBy = sortBy,
-                    Descending = descending,
-                    PageIndex = pageIndex,
-                    PageSize = pageSize,
-                    Name = name,
-                    ShowInative = showInative,
-                    IncludeWallets = includeWallets
-                };
 
                 var persons = _personService.List(filter);
 
