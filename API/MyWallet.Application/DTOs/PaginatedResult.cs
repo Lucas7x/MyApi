@@ -12,7 +12,7 @@ namespace MyWallet.Application.DTOs
             SortOrder = descending ? "desc" : "asc";
             TotalItens = query.Count();
 
-            SortBy = GetValidSortByField(SearchableFieldsHelper.GetFields<T>());
+            SortBy = GetValidSortByField(sortBy);
 
             query = ApplySortFilter(query, SortBy, descending);
 
@@ -31,15 +31,16 @@ namespace MyWallet.Application.DTOs
         }
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
-        public string SortBy { get; set; } = "id";
+        public string SortBy { get; set; }
         public string SortOrder { get; private set; } = "asc";
         public List<T> Rows { get; set; } = new List<T>();
 
-        private string GetValidSortByField(IEnumerable<string> validFieldNames)
+        private string GetValidSortByField(string currentSortBy)
         {
+            IEnumerable<string> validFieldNames = SearchableFieldsHelper.GetFields<T>();
             var field = validFieldNames
-                        .Any(f => string.Equals(f, SortBy, StringComparison.OrdinalIgnoreCase))
-                        ? SortBy : "id";
+                        .Any(f => string.Equals(f, currentSortBy, StringComparison.OrdinalIgnoreCase))
+                        ? currentSortBy : "id";
             return field;
         }
 
