@@ -7,10 +7,10 @@ namespace MyWallet.Application.Interfaces
     public interface IUserRepository
     {
         PaginatedResult<User> List(UserQueryFilter filter);
-        Person? GetById(int id);
-        Person Create(User user);
-        Person Update(User user);
-        Person Delete(User user);
+        User? GetById(int id);
+        User Create(User user);
+        User Update(User user);
+        User Delete(User user);
         void SaveChanges();
     }
 }
