@@ -20,6 +20,9 @@ builder.Services.AddSwaggerGen();
 // Configure DataContext
 builder.Services.ConfigureDatabaseContext(builder.Configuration);
 
+// Configure Authentication
+builder.Services.ConfigureAuthentication(builder.Configuration);
+
 // Registering Services and Repositories
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
