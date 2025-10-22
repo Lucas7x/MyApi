@@ -8,8 +8,8 @@ namespace MyWallet.Application.Interfaces
     {
         public UserDTO GetById(int id);
         public PaginatedResult<UserDTO> List(UserQueryFilter filter);
-        public User Create(UserCreateDTO UserDto);
-        public User Update(int id, UserUpdateDTO UserDto);
-        public User Delete(int id);
+        UserDTO Create(UserCreateDTO userDto);
+        UserDTO Update(int id, UserUpdateDTO userDto);
+        UserDTO Delete(int id);
     }
 }
