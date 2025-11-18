@@ -1,8 +1,8 @@
 using MyApi.Extensions;
-using MyApi.Services;
+using MyApi.Utils;
 using MyWallet.Application.Interfaces;
+using MyWallet.Application.Service;
 using MyWallet.Application.Services;
-using MyWallet.Infrastructure.Database;
 using MyWallet.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,8 +26,15 @@ builder.Services.ConfigureAuthentication(builder.Configuration);
 // Registering Services and Repositories
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 //builder.Services.AddScoped<DebtInService>();
+
+builder.Services.AddScoped<IAppSettingsProvider, AppSettingsProvider>();
 
 var app = builder.Build();
 
