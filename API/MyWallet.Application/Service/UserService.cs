@@ -10,11 +10,13 @@ namespace MyWallet.Application.Service
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IPasswordService _passwordService;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IPasswordService passwordService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _passwordService = passwordService;
         }
 
         public UserDTO GetById(int id)
@@ -31,6 +33,8 @@ namespace MyWallet.Application.Service
         public UserDTO Create(UserCreateDTO userDto)
         {
             var user = _mapper.Map<User>(userDto);
+            _passwordService.CreatePasswordHash(userDto.Password, out byte[] hash, out byte[] salt);
+            user.UpdatePassword(hash, salt);
 
             user = _userRepository.Create(user);
             _userRepository.SaveChanges();
