@@ -8,6 +8,7 @@ namespace MyWallet.Application.Interfaces
     {
         PaginatedResult<User> List(UserQueryFilter filter);
         User? GetById(int id);
+        User? GetByEmail(string email);
         User Create(User user);
         User Update(User user);
         User Delete(User user);

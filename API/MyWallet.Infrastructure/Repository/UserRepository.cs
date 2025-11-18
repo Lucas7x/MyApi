@@ -27,6 +27,15 @@ namespace MyWallet.Infrastructure.Repository
             return user;
         }
 
+        public User? GetByEmail(string email)
+        {
+            var user = _context.Users
+                .Where(x => x.DeletedAt == null)
+                .FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+
+            return user;
+        }
+
         public PaginatedResult<User> List(UserQueryFilter filter)
         {
             throw new NotImplementedException();
