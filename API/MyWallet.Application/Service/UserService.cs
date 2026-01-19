@@ -68,5 +68,11 @@ namespace MyWallet.Application.Service
 
             return _mapper.Map<UserDTO>(user);
         }
+
+        public UserDTO GetByEmail(string email)
+        {
+            User? user = _userRepository.GetByEmail(email);
+            return _mapper.Map<UserDTO>(user);
+        }
     }
 }

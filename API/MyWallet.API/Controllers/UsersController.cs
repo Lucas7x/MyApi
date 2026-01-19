@@ -18,7 +18,7 @@ namespace MyApi.Controllers
             _authenticateService = authenticateService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public IActionResult Post(UserCreateDTO dto)
         {
             try
@@ -47,6 +47,34 @@ namespace MyApi.Controllers
             }
         }
 
+        [HttpPost("login")]
+        public IActionResult Login(UserLoginDTO dto)
+        {
+            try
+            {
+                var userExists = _authenticateService.UserExists(dto.Email);
+                if (!userExists)
+                    return Unauthorized("Usuário ou senha inválido.");
 
+                var authenticated = _authenticateService.Authenticate(dto.Email, dto.Password);
+                if (!authenticated)
+                    return Unauthorized("Usuário ou senha inválido.");
+
+                var user = _userService.GetByEmail(dto.Email);
+                if (user == null)
+                    return Unauthorized("Usuário ou senha inválido.");
+
+                var token = _authenticateService.GenerateToken(user.Id, user.Email);
+
+                return Ok(new UserToken
+                {
+                    Token = token
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

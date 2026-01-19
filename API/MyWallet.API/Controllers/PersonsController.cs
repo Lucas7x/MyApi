@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyWallet.Application.DTOs;
 using MyWallet.Application.Interfaces;
 using MyWallet.Application.QueryFilters;
@@ -8,6 +9,7 @@ namespace MyApi.Controllers
 {
     [ApiController]
     [Route("[Controller]")]
+    [Authorize]
     public class PersonsController : ControllerBase
     {
         private readonly IPersonService _personService;
