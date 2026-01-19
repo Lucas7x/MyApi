@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import axios from 'axios';
+import apiHandler from './apiHandler'
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
@@ -32,7 +32,7 @@ function App() {
 
   // --------------------------------------------------------------------------------
   const getPersons = async (pageIndex = currentPage, size = pageSize, filter = filterName) => {
-    await axios.get(`${baseUrl}?pageIndex=${pageIndex}&pageSize=${size}&name=${filter}`)
+    await apiHandler.get(`/Persons?pageIndex=${pageIndex}&pageSize=${pageSize}&name=${filter}`)
       .then(response => {
         setData(response.data.rows);
         setCurrentPage(response.data.currentPage);
