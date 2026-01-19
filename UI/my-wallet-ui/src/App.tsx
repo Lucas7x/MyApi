@@ -22,13 +22,18 @@ function App() {
   const [modalDeletePerson, setModalDeletePerson] = useState(false);
 
   const [successMessage, setSuccessMessage] = useState('');
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
   const [filterName, setFilterName] = useState("");
+
+  // Types ---------------------------------
+  type Errors = {
+    Name?: string;
+  };
 
   // --------------------------------------------------------------------------------
   const getPersons = async (pageIndex = currentPage, size = pageSize, filter = filterName) => {
@@ -98,7 +103,7 @@ function App() {
 
   const postPerson = async () => {
     delete selectedPerson.id;
-    await axios.post(baseUrl, selectedPerson)
+    await apiHandler.post(baseUrl, selectedPerson)
       .then(response => {
         setData(data.concat(
           response.data
@@ -120,7 +125,7 @@ function App() {
   }
 
   const putPerson = async () => {
-    await axios.put(baseUrl + "/" + selectedPerson.id, selectedPerson)
+    await apiHandler.put(baseUrl + "/" + selectedPerson.id, selectedPerson)
       .then(response => {
         var responseData = response.data;
 
@@ -146,7 +151,7 @@ function App() {
   }
 
   const deletePerson = async () => {
-    await axios.delete(baseUrl + "/" + (selectedPerson && selectedPerson.id))
+    await apiHandler.delete(baseUrl + "/" + (selectedPerson && selectedPerson.id))
       .then(response => {
         var responseData = response.data;
         setData(
