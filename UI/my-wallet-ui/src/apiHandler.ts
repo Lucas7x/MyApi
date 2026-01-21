@@ -14,7 +14,7 @@ apiHandler.interceptors.response.use(
             // Limpar dados de autenticação
             localStorage.removeItem('token');
 
-            window.location.href('/login');
+            window.location.href = "/login";
         }
 
         return Promise.reject(error);

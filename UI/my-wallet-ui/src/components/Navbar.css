@@ -15,11 +15,11 @@ nav {
 
 #navbar li {
   list-style: none;
-  padding: 0 20px;
+  padding: 0 10px;
   position: relative;
 }
 
-#navbar li a {
+#navbar li {
   text-decoration: none;
   font-size: 1.3rem;
   font-weight: 600;
@@ -27,13 +27,13 @@ nav {
   transition: 0.3s ease-in-out;
 }
 
-#navbar li a:hover,
-#navbar li a.active {
+#navbar li :hover,
+#navbar li .active {
   color: #3b3b3cff;
 }
 
-#navbar li a:hover::after,
-#navbar li a.active::after {
+#navbar li :hover::after,
+#navbar li .active::after {
   content: "";
   width: 30%;
   height: 2px;
