@@ -34,16 +34,17 @@ export function Persons() {
 
     // --------------------------------------------------------------------------------
     const getPersons = async (pageIndex = currentPage, size = pageSize, filter = filterName) => {
-    await apiHandler.get(`/Persons?pageIndex=${pageIndex}&pageSize=${pageSize}&name=${filter}`)
-        .then(response => {
-        setData(response.data.rows);
-        setCurrentPage(response.data.currentPage);
-        setPageSize(response.data.pageSize);
-        setTotalPages((response.data.totalPages > 0) ? response.data.totalPages : 1);
-        })
-        .catch(error => {
-        console.log(error);
-        });
+        await apiHandler
+            .get(`/Persons?pageIndex=${pageIndex}&pageSize=${pageSize}&name=${filter}`)
+            .then(response => {
+                setData(response.data.rows);
+                setCurrentPage(response.data.currentPage);
+                setPageSize(response.data.pageSize);
+                setTotalPages((response.data.totalPages > 0) ? response.data.totalPages : 1);
+                })
+                .catch(error => {
+                console.log(error);
+            });
     }
 
     const handleChange = e => {

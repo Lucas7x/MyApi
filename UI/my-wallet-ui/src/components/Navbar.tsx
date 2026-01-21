@@ -36,8 +36,9 @@ const Navbar: React.FC = () => {
 
             <div>
                 <ul id="navbar" className={clicked ? "#navbar active" : "navbar"}>
-                    <li onClick={() => goTo("/")}><h2>Início</h2></li>
+                    <li onClick={() => goTo("/home")}><h2>Início</h2></li>
                     <li onClick={() => goTo("/persons")}><h2>Pessoas</h2></li>
+                    <li onClick={() => goTo("/login")}><h2>Sair</h2></li>
                 </ul>
             </div>
 
