@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import apiHandler from "../../apiHandler";
 import Navbar from "../../components/Navbar";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { useToast } from "../../contexts/ToastContext";
 
 export function Persons() {
     const baseUrl = 'https://localhost:7240/Persons'
+    const { showToast } = useToast();
 
     // states --------------------------------------------------------------------------------
     const [data, setData] = useState([]);
@@ -18,7 +20,6 @@ export function Persons() {
     const [modalUpdatePerson, setModalUpdatePerson] = useState(false);
     const [modalDeletePerson, setModalDeletePerson] = useState(false);
 
-    const [successMessage, setSuccessMessage] = useState('');
     const [errors, setErrors] = useState<Errors>({});
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -56,23 +57,23 @@ export function Persons() {
     }
 
     const openCloseModalIncludePerson = () => {
-    setErrors({});
-    setModalIncludePerson(!modalIncludePerson);
+        setErrors({});
+        setModalIncludePerson(!modalIncludePerson);
     }
 
     const openCloseModalUpdatePerson = () => {
-    setErrors({});
-    setModalUpdatePerson(!modalUpdatePerson);
+        setErrors({});
+        setModalUpdatePerson(!modalUpdatePerson);
     }
 
     const openCloseModalDeletePerson = () => {
-    setModalDeletePerson(!modalDeletePerson);
+        setModalDeletePerson(!modalDeletePerson);
     }
 
     const updateOrDeletePerson = (person, option) => {
-    setSelectedPerson(person);
-    (option === 'update') ?
-        openCloseModalUpdatePerson() : openCloseModalDeletePerson();
+        setSelectedPerson(person);
+        (option === 'update') ?
+            openCloseModalUpdatePerson() : openCloseModalDeletePerson();
     }
 
     // Pagination
@@ -103,66 +104,63 @@ export function Persons() {
     delete selectedPerson.id;
     await apiHandler.post(baseUrl, selectedPerson)
         .then(response => {
-        setData(data.concat(
-            response.data
-        ));
-        setUpdateData(true);
+            setData(data.concat(
+                response.data
+            ));
+            setUpdateData(true);
 
-        openCloseModalIncludePerson();
-        setSuccessMessage("Pessoa cadastrada com sucesso!");
-        setTimeout(() => setSuccessMessage(""), 3000); // limpa após 3s
-        setErrors({});
+            openCloseModalIncludePerson();
+            showToast("Pessoa cadastrada com sucesso!");
+            setErrors({});
         })
         .catch(error => {
-        if (error.response && error.response.status === 400) {
-            setErrors(error.response.data.errors);
-        } else {
-            console.log(error.response);
-        }
+            if (error.response && error.response.status === 400) {
+                setErrors(error.response.data.errors)
+            } else {
+                console.log(error.response);
+            }
         });
     }
 
     const putPerson = async () => {
     await apiHandler.put(baseUrl + "/" + selectedPerson.id, selectedPerson)
         .then(response => {
-        var responseData = response.data;
+            var responseData = response.data;
 
-        setData(data.map(person =>
-            person.id === selectedPerson.id
-            ? { ...person, name: responseData.name }
-            : person
-        ));
-        setUpdateData(true);
+            setData(data.map(person =>
+                person.id === selectedPerson.id
+                ? { ...person, name: responseData.name }
+                : person
+            ));
+            setUpdateData(true);
 
-        openCloseModalUpdatePerson();
-        setSuccessMessage("Pessoa alterada com sucesso!");
-        setTimeout(() => setSuccessMessage(""), 3000);
-        setErrors({});
+            openCloseModalUpdatePerson();
+            showToast("Pessoa alterada com sucesso!");
+            setErrors({});
         })
         .catch(error => {
-        if (error.response && error.response.status === 400) {
-            setErrors(error.response.data.errors)
-        } else {
-            console.log(error.response);
-        }
+            if (error.response && error.response.status === 400) {
+                setErrors(error.response.data.errors);
+            } else {
+                console.log(error.response);
+            }
         })
     }
 
     const deletePerson = async () => {
     await apiHandler.delete(baseUrl + "/" + (selectedPerson && selectedPerson.id))
         .then(response => {
-        var responseData = response.data;
-        setData(
-            data.filter(person => person.id !== responseData.id)
-        );
-        setUpdateData(true);
+            var responseData = response.data;
+            setData(
+                data.filter(person => person.id !== responseData.id)
+            );
+            setUpdateData(true);
 
-        openCloseModalDeletePerson();
-        setSuccessMessage("Pessoa excluida com sucesso!");
-        setTimeout(() => setSuccessMessage(""), 3000);
+            openCloseModalDeletePerson();
+            showToast("Pessoa excluida com sucesso!");
         })
         .catch(error => {
-        console.log(error);
+            console.log(error);
         });
     }
 
@@ -178,24 +176,6 @@ export function Persons() {
     return (
     <div className="person-container">
         <Navbar />
-
-        {successMessage && (
-        <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 9999 }}>
-            <div className="toast show align-items-center text-bg-success border-0">
-            <div className="d-flex">
-                <div className="toast-body">
-                {successMessage}
-                </div>
-                <button
-                type="button"
-                className="btn-close btn-close-white me-2 m-auto"
-                onClick={() => setSuccessMessage("")}
-                ></button>
-            </div>
-            </div>
-        </div>
-        )}
-
 
         <main className='person-container'>
         <div className='d-flex align-items-center mb-3 gap-2'>

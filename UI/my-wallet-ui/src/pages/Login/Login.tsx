@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import apiHandler from '../../apiHandler';
 import { useState } from 'react';
 import { LoginRequest, LoginResponse } from '../../types/Auth';
+import { useToast } from '../../contexts/ToastContext';
 
 export function Login() {
     const navigate = useNavigate();
+    const { showToast } = useToast();
 
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
@@ -24,12 +26,13 @@ export function Login() {
 
             localStorage.setItem("token", response.data.token);
 
+            showToast("Login realizado com sucesso!");
             navigate("/home");
         } catch (err: any) {
             if (err.response?.status === 401) {
-                setError("E-mail ou senha inválidos");
+                showToast("E-mail ou senha inválidos", "error");
             } else {
-                setError("Erro ao realizar login");
+                showToast("Erro ao realizar login", "error");
             }
         }
     }
