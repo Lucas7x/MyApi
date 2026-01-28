@@ -12,8 +12,8 @@ export function Persons() {
     const [data, setData] = useState([]);
     const [updateData, setUpdateData] = useState(true);
     const [selectedPerson, setSelectedPerson] = useState({
-    id: null,
-    name: null
+        id: null,
+        name: null
     })
 
     const [modalIncludePerson, setModalIncludePerson] = useState(false);
@@ -49,15 +49,19 @@ export function Persons() {
     }
 
     const handleChange = e => {
-    const { name, value } = e.target;
-    setSelectedPerson({
-        ...selectedPerson,
-        [name]: value === "" ? null : value
-    });
+        const { name, value } = e.target;
+        setSelectedPerson({
+            ...selectedPerson,
+            [name]: value === "" ? "" : value
+        });
     }
 
     const openCloseModalIncludePerson = () => {
         setErrors({});
+        setSelectedPerson({
+            id: null,
+            name: ""
+        });
         setModalIncludePerson(!modalIncludePerson);
     }
 
@@ -90,19 +94,19 @@ export function Persons() {
     }
 
     const changePageSize = (e) => {
-    console.log("changePageSize");
-    const newSize = parseInt(e.target.value);
-    console.log(newSize);
-    setPageSize(newSize);
-    console.log(pageSize);
-    getPersons(1, newSize);
+        const newSize = parseInt(e.target.value);
+        setPageSize(newSize);
+        getPersons(1, newSize);
     }
 
     // API requests
 
     const postPerson = async () => {
-    delete selectedPerson.id;
-    await apiHandler.post(baseUrl, selectedPerson)
+        const personToSend = {
+            name: selectedPerson.name
+        };
+
+        await apiHandler.post(baseUrl, personToSend)
         .then(response => {
             setData(data.concat(
                 response.data
@@ -110,8 +114,8 @@ export function Persons() {
             setUpdateData(true);
 
             openCloseModalIncludePerson();
-            showToast("Pessoa cadastrada com sucesso!");
-            setErrors({});
+            showToast("Pessoa cadastrada com sucesso!"); 
+            setErrors({}); 
         })
         .catch(error => {
             if (error.response && error.response.status === 400) {
@@ -123,7 +127,7 @@ export function Persons() {
     }
 
     const putPerson = async () => {
-    await apiHandler.put(baseUrl + "/" + selectedPerson.id, selectedPerson)
+        await apiHandler.put(baseUrl + "/" + selectedPerson.id, selectedPerson)
         .then(response => {
             var responseData = response.data;
 
@@ -148,7 +152,7 @@ export function Persons() {
     }
 
     const deletePerson = async () => {
-    await apiHandler.delete(baseUrl + "/" + (selectedPerson && selectedPerson.id))
+        await apiHandler.delete(baseUrl + "/" + (selectedPerson && selectedPerson.id))
         .then(response => {
             var responseData = response.data;
             setData(
@@ -167,8 +171,8 @@ export function Persons() {
     useEffect(
     () => {
         if (updateData) {
-        getPersons(currentPage, pageSize, filterName);
-        setUpdateData(false);
+            getPersons(currentPage, pageSize, filterName);
+            setUpdateData(false);
         }
     }, [updateData]
     );
