@@ -1,4 +1,5 @@
 import axios from "axios";
+import { emitToast } from "./events/toastEvent";
 
 const apiHandler = axios.create({
     baseURL: 'https://localhost:7240',
@@ -8,13 +9,20 @@ const apiHandler = axios.create({
 apiHandler.interceptors.response.use(
     response => response,
     error => {
-        if (error.response && error.response.status === 401) {
-            alert('Sessão expirada. Faça login.');
+        const status = error.response.status;
+
+        if (status === 401) {
+            window.location.href = "/login";
 
             // Limpar dados de autenticação
             localStorage.removeItem('token');
+        }
 
-            window.location.href = "/login";
+        if (status === 500) {
+            emitToast({
+                message: "Erro interno. Tente novamente mais tarde.",
+                type: "error",
+            });
         }
 
         return Promise.reject(error);
