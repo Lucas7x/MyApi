@@ -12,3 +12,7 @@ export function registerToastListener(fn: ToastListener) {
 export function emitToast(payload: ToastPayload) {
     listener?.(payload);
 }
+
+export function emitPersistentToast(payload: ToastPayload) {
+    sessionStorage.setItem("pendingToast", JSON.stringify(payload));
+}

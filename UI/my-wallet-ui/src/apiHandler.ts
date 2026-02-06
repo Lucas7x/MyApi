@@ -1,5 +1,5 @@
 import axios from "axios";
-import { emitToast } from "./events/toastEvent";
+import { emitPersistentToast, emitToast } from "./events/toastEvent";
 
 const apiHandler = axios.create({
     baseURL: 'https://localhost:7240',
@@ -9,12 +9,16 @@ const apiHandler = axios.create({
 apiHandler.interceptors.response.use(
     response => response,
     error => {
-        const status = error.response.status;
+        const status = error.response?.status;
+        const url = error.config?.url;
 
-        if (status === 401) {
-            window.location.href = "/login";
+        if (status === 401 && url !== "/users/login") {
+            emitPersistentToast({
+                message: "Sessão expirada. Faça login novamente.",
+                type: "warning"
+            });
 
-            // Limpar dados de autenticação
+            window.dispatchEvent(new Event("auth-expired"));
             localStorage.removeItem('token');
         }
 

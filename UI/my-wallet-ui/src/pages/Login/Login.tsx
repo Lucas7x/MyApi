@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import apiHandler from '../../apiHandler';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoginRequest, LoginResponse } from '../../types/Auth';
 import { useToast } from '../../contexts/ToastContext/ToastContext';
 
@@ -8,9 +8,19 @@ export function Login() {
     const navigate = useNavigate();
     const { showToast } = useToast();
 
-    const [ email, setEmail ] = useState("");
-    const [ password, setPassword ] = useState("");
-    const [ error, setError ] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const storedToast = sessionStorage.getItem("pendingToast");
+
+        if (storedToast) {
+            showToast(JSON.parse(storedToast));
+            sessionStorage.removeItem("pendingToast");
+            return;
+        }
+    }, [showToast]);
 
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
@@ -34,37 +44,37 @@ export function Login() {
         } catch (err: any) {
             if (err.response?.status === 401) {
                 showToast({
-                    message: "E-mail ou senha inválidos", 
+                    message: "E-mail ou senha inválidos",
                     type: "error"
                 });
             } else {
                 showToast({
-                    message: "Erro ao realizar login", 
-                    type:"error"
+                    message: "Erro ao realizar login",
+                    type: "error"
                 });
             }
         }
     }
 
     return (
-        <div style={{display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center'}}>
+        <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
             <form onSubmit={handleLogin}>
                 <h2>Login</h2>
-                { error && <p style={{ color: "red" }}> {error} </p> }
+                {error && <p style={{ color: "red" }}> {error} </p>}
 
-                <input type="email" 
-                    placeholder='E-mail' 
+                <input type="email"
+                    placeholder='E-mail'
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    required    
+                    required
                 />
                 <br /><br />
 
-                <input type="password" 
+                <input type="password"
                     placeholder='Senha'
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    required 
+                    required
                 />
                 <br /><br />
 

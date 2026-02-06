@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useToast } from "./ToastContext";
-import { registerToastListener } from "../../events/toastEvent";
+import { useToast } from "../contexts/ToastContext/ToastContext";
+import { registerToastListener } from "../events/toastEvent";
 
 export function ToastListener() {
     const {showToast} = useToast();
