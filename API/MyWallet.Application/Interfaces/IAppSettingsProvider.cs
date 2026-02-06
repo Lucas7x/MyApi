@@ -5,5 +5,6 @@
         string GetJwtSigningKey();
         string GetJwtIssuer();
         string GetJwtAudience();
+        int GetJwtExpirationTimeInMinutes();
     }
 }

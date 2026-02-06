@@ -37,5 +37,17 @@ namespace MyApi.Utils
 
             return signingKey;
         }
+
+        public int GetJwtExpirationTimeInMinutes()
+        {
+            int? expirationTimeInMinutes = _configuration.GetValue<int>("Jwt:ExpirationTimeInMinutes", 60);
+            
+            if (expirationTimeInMinutes is null)
+                throw new ArgumentNullException(nameof(expirationTimeInMinutes));
+            if (expirationTimeInMinutes <= 0)
+                throw new ArgumentOutOfRangeException(nameof(expirationTimeInMinutes));
+
+            return expirationTimeInMinutes.Value;
+        }
     }
 }

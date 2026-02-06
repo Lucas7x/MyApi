@@ -45,7 +45,7 @@ namespace MyWallet.Application.Service
 
             var credentials = new SigningCredentials(privateKey, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.Now.AddMinutes(10);
+            var expiration = DateTime.Now.AddMinutes(_appSettingsProvider.GetJwtExpirationTimeInMinutes());
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _appSettingsProvider.GetJwtIssuer(),
