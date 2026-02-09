@@ -20,7 +20,7 @@ export function ToastProvider({ children }: Props) {
         setToasts(prev => [...prev, { ...payload, id }]);
         setTimeout(() => {
             setToasts(prev => prev.filter(toast => toast.id !== id));
-        }, 3000);
+        }, 1500);
     }, []);
 
     return (

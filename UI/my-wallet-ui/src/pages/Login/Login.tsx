@@ -3,6 +3,8 @@ import apiHandler from '../../apiHandler';
 import { useEffect, useState } from 'react';
 import { LoginRequest, LoginResponse } from '../../types/Auth';
 import { useToast } from '../../contexts/ToastContext/ToastContext';
+import '../../styles/global.css';
+import '../../styles/login.css';
 
 export function Login() {
     const navigate = useNavigate();
@@ -57,28 +59,45 @@ export function Login() {
     }
 
     return (
-        <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
-            <form onSubmit={handleLogin}>
+        <div
+            className='login-page'
+        >
+            <form
+                className="auth-form"
+                onSubmit={handleLogin}
+            >
                 <h2>Login</h2>
                 {error && <p style={{ color: "red" }}> {error} </p>}
 
-                <input type="email"
-                    placeholder='E-mail'
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                />
-                <br /><br />
+                <div className="input-field">
+                    <label htmlFor="email">E-mail</label>
+                    <input type="email"
+                        id='email'
+                        placeholder='digite seu e-mail'
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
 
-                <input type="password"
-                    placeholder='Senha'
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                />
-                <br /><br />
+                <div className="input-field">
+                    <label htmlFor="password">Senha</label>
+                    <input type="password"
+                        id='password'
+                        placeholder='Senha'
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
 
                 <button type='submit'>Entrar</button>
+
+                <p className='signup-link'>Não tem conta? 
+                    <a href="/signup"
+                        onClick={() => navigate('/signup')}
+                    > Cadastre-se</a>
+                </p>
             </form>
         </div>
     );
