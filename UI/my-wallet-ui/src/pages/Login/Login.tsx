@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import apiHandler from '../../apiHandler';
 import { useEffect, useState } from 'react';
-import { LoginRequest, LoginResponse } from '../../types/Auth';
+import { LoginRequest, LoginResponse } from '../../types/UserTypes';
 import { useToast } from '../../contexts/ToastContext/ToastContext';
 import '../../styles/global.css';
 import '../../styles/login.css';
@@ -94,8 +94,8 @@ export function Login() {
                 <button type='submit'>Entrar</button>
 
                 <p className='signup-link'>Não tem conta? 
-                    <a href="/signup"
-                        onClick={() => navigate('/signup')}
+                    <a href=''
+                        onClick={() => navigate('/users/register')}
                     > Cadastre-se</a>
                 </p>
             </form>

@@ -28,7 +28,7 @@ namespace MyApi.Controllers
 
                 var userExists = _authenticateService.UserExists(dto.Email);
                 if (userExists)
-                    return BadRequest("O e-mail informado já está sendo utilizado.");
+                    return Conflict("O e-mail informado já está sendo utilizado.");
 
                 var createdUser = _userService.Create(dto);
                 if (createdUser == null)

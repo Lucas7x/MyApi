@@ -1,0 +1,66 @@
+.register-user-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #2f2f2f;
+    padding: 20px 0;
+}
+
+.register-user-form {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    max-width: 450px;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background-color: #fbfbfb;
+}
+
+.register-user-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 0.8rem;
+}
+
+.input-field label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.input-field input.is-invalid {
+    border-color: #dc3545;
+}
+
+.custom-invalid-feedback {
+    font-size: 0.75rem;
+    color: #dc3545;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.register-user-form button {
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+
+.cancel-button {
+    background-color: #6c757d !important;
+    margin-top: 10px !important;
+}
+
+.cancel-button:hover {
+    background-color: #5a6268 !important;
+}

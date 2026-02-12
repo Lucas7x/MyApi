@@ -3,6 +3,7 @@ import { Login } from "../pages/Login/Login";
 import { Home } from "../pages/Home/Home";
 import { Persons } from "../pages/Persons/Persons";
 import { ProtectedRoute } from "./ProtectedRoutes";
+import { UserRegister } from "../pages/Users/UserRegister";
 
 export function AppRoutes() {
     return (
@@ -11,6 +12,8 @@ export function AppRoutes() {
             <Route path="/" element={<Navigate to="/home" />} />
 
             <Route path="/login" element={<Login />} />
+            <Route path="/users/register" element={<UserRegister />} />
+
             <Route path="/home" element={
                 <ProtectedRoute>
                     <Home />
